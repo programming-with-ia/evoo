@@ -14,6 +14,7 @@ import { JsonStructure } from "../types";
  */
 export const installDependencies = async (
     packages: NonNullable<JsonStructure["dependencies"]>,
+    dev: boolean = false,
 ) => {
     // Convert input into an array of package install strings
 
@@ -68,9 +69,10 @@ export const installDependencies = async (
             return;
         }
 
+        const devFlag = dev ? ["-D"] : [];
         switch (pkgManager) {
             case "npm":
-                await execa(pkgManager, ["install", ...filteredPackages], {
+                await execa(pkgManager, ["install", ...filteredPackages, ...devFlag], {
                     cwd: process.cwd(),
                     stderr: "inherit",
                 });
@@ -78,7 +80,7 @@ export const installDependencies = async (
 
             case "pnpm":
                 return execWithSpinner(pkgManager, {
-                    args: ["add", ...filteredPackages],
+                    args: ["add", ...filteredPackages, ...devFlag],
                     onDataHandle: () => (data) => {
                         const text = data.toString();
                         if (text.includes("Progress")) {
@@ -93,7 +95,7 @@ export const installDependencies = async (
 
             case "yarn":
                 return execWithSpinner(pkgManager, {
-                    args: ["add", ...filteredPackages],
+                    args: ["add", ...filteredPackages, ...devFlag],
                     onDataHandle: () => (data) => {
                         logger.log(data.toString());
                     },
@@ -101,7 +103,7 @@ export const installDependencies = async (
 
             case "bun":
                 return execWithSpinner(pkgManager, {
-                    args: ["add", ...filteredPackages],
+                    args: ["add", ...filteredPackages, ...devFlag],
                     stdout: "ignore",
                 });
         }

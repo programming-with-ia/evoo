@@ -11,3 +11,4 @@ export * from "./lib/setting";
 export * from "./lib/shared";
 export * from "./lib/utils";
 export * from "./types";
+export * from "./plugin-types";

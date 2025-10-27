@@ -18,6 +18,7 @@ import {
 } from "@evoo/core";
 import { processJson } from "./processJson";
 
+const storeFile = ".evoo.json";
 const program = new Command();
 
 program
@@ -40,9 +41,9 @@ program
 
             sharedData.cliOptions = options;
 
-            if (fs.pathExistsSync(Consts.storeFile)) {
+            if (fs.pathExistsSync(storeFile)) {
                 sharedData.storedData = fs.readJsonSync(
-                    path.join(process.cwd(), Consts.storeFile),
+                    path.join(process.cwd(), storeFile),
                 );
             }
 
@@ -50,7 +51,7 @@ program
 
             if (Object.keys(sharedData.storedData).length > 0) {
                 fs.writeJsonSync(
-                    path.join(process.cwd(), Consts.storeFile),
+                    path.join(process.cwd(), storeFile),
                     sharedData.storedData,
                 );
             }

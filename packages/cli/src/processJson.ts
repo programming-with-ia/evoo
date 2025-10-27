@@ -17,6 +17,7 @@ import {
     setDeepValue,
 } from "@evoo/core";
 import { evaluateWhen } from "./lib/evaluateWhen";
+import { loadPlugin, getJobExecutor } from "./lib/pluginManager";
 
 export async function processJson(jsonPath: string): Promise<void> {
     //
@@ -31,6 +32,12 @@ export async function processJson(jsonPath: string): Promise<void> {
         jsonData = await Fetch<JsonStructure>(jsonPath, "json");
     } else {
         jsonData = fs.readJsonSync(path.resolve(jsonPath));
+    }
+
+    if (jsonData.plugins) {
+        for (const pluginName of jsonData.plugins) {
+            await loadPlugin(pluginName);
+        }
     }
 
     const basePath = (
@@ -239,7 +246,12 @@ async function processJob({
     } else if (job.type === "log") {
         logger[job.logLevel ?? "log"](job.message);
     } else {
-        throw new Error(`Invalid job type '${job.type}'`);
+        const jobExecutor = getJobExecutor(job.type);
+        if (jobExecutor) {
+            await jobExecutor(job);
+        } else {
+            throw new Error(`Invalid job type '${job.type}'`);
+        }
     }
 
     if (id) {
