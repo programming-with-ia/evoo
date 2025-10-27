@@ -1,7 +1,7 @@
 // --- Type Definitions ---
 /** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 
-import { getDeepValue } from "./utils";
+import { getDeepValue } from "@evoo/core";
 
 /** Defines the shape of the context object passed to the evaluator. */
 type Context = {

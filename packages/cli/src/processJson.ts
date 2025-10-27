@@ -12,11 +12,11 @@ import {
     FileType,
     Job,
     JsonStructure,
-    evaluateWhen,
     prompts,
     parseVar,
     setDeepValue,
 } from "@evoo/core";
+import { evaluateWhen } from "./lib/evaluateWhen";
 
 export async function processJson(jsonPath: string): Promise<void> {
     //

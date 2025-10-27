@@ -1,4 +1,3 @@
-export * from "./lib/evaluateWhen";
 export * from "./lib/fetch";
 export * from "./lib/getUserPkgManager";
 export * from "./lib/globals";
