@@ -4,16 +4,19 @@ import chalk from "chalk";
 import fs from "fs-extra";
 import path from "path";
 import { Command } from "commander";
-import { logger } from "./lib/logger";
-import { Consts, globals as G } from "./lib/globals";
 import {
+    logger,
+    Consts,
+    globals as G,
     addShadcnComponents,
     installDependencies,
-} from "./lib/installDependencies";
-import { config } from "./lib/setting";
-import { sharedData } from "./lib/shared";
+    config,
+    sharedData,
+    CliOptions,
+    JsonStructure,
+    Settings,
+} from "@evoo/core";
 import { processJson } from "./processJson";
-import type { CliOptions, JsonStructure, Settings } from "./types";
 
 const program = new Command();
 

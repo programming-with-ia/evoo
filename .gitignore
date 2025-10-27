@@ -231,3 +231,6 @@ test
 .idea
 /src/project-config
 .todo
+
+# turbo
+.turbo

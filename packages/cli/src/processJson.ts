@@ -1,16 +1,22 @@
 import fs from "fs-extra";
 import path from "path";
-import { logger } from "./lib/logger";
-import { Consts, globals as G } from "./lib/globals";
-import { isValidUrl } from "./lib/helpers";
-import { handleFilePath } from "./lib/handlePath";
-import { Fetch } from "./lib/fetch";
-import { getValueFromSource, sharedData } from "./lib/shared";
-import type { FileType, Job, JsonStructure } from "./types";
-import { evaluateWhen } from "./lib/evaluateWhen";
-import { prompts } from "./lib/prompts";
-import { parseVar } from "./lib/match-vars";
-import { setDeepValue } from "./lib/utils";
+import {
+    logger,
+    Consts,
+    globals as G,
+    isValidUrl,
+    handleFilePath,
+    Fetch,
+    getValueFromSource,
+    sharedData,
+    FileType,
+    Job,
+    JsonStructure,
+    evaluateWhen,
+    prompts,
+    parseVar,
+    setDeepValue,
+} from "@evoo/core";
 
 export async function processJson(jsonPath: string): Promise<void> {
     //
