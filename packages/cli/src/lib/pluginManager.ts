@@ -1,6 +1,5 @@
-import { Plugin } from "@evoo/core";
+import { Plugin, installDependencies } from "@evoo/core";
 import { logger } from "@evoo/core";
-import { installPlugin, resolvePlugin } from "./handle-plugin";
 
 const loadedPlugins = new Map<string, Plugin>();
 
@@ -21,25 +20,22 @@ export async function loadPlugin(pluginName: string): Promise<void> {
         return;
     }
 
-    let pluginPath = await resolvePlugin(pluginName);
+    const importAndRegister = async () => {
+        const plugin = await import(pluginName);
+        registerPlugin(pluginName, plugin.default);
+    };
 
-    if (!pluginPath) {
-        logger.warn(`Plugin '${pluginName}' not found. Attempting to install it...`);
+    try {
+        await importAndRegister();
+    } catch (error) {
+        logger.warn(`Failed to load plugin '${pluginName}'. Attempting to install it...`);
         try {
-            await installPlugin(pluginName);
-            pluginPath = await resolvePlugin(pluginName);
-
-            if (!pluginPath) {
-                throw new Error(`Failed to resolve plugin '${pluginName}' after installation.`);
-            }
+            await installDependencies([pluginName], true);
+            await importAndRegister();
         } catch (installError) {
             logger.error(`Failed to install or load plugin '${pluginName}':`, installError);
-            return;
         }
     }
-
-    const plugin = await import(pluginPath);
-    registerPlugin(pluginName, plugin.default);
 }
 
 export function getJobExecutor(jobType: string): ((job: any) => Promise<void>) | null {
