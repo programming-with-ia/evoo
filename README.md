@@ -1,8 +1,8 @@
-# Scaflo 🏗️
+# Evoo 🏗️
 
-[](https://www.google.com/search?q=https://www.npmjs.com/package/scaflo)
+[](https://www.google.com/search?q=https://www.npmjs.com/package/evoo)
 
-**Scaflo** is a powerful, job-based CLI tool for automating project scaffolding. Define a series of tasks in a single JSON file—creating files, asking questions, installing dependencies, and more. Scaflo executes them sequentially with support for **conditional logic**, **user prompts**, and **persistent state** to create highly adaptable templates.
+**Evoo** is a powerful, job-based CLI tool for automating project scaffolding. Define a series of tasks in a single JSON file—creating files, asking questions, installing dependencies, and more. Evoo executes them sequentially with support for **conditional logic**, **user prompts**, and **persistent state** to create highly adaptable templates.
 
 It works seamlessly with both local and remote JSON configurations, making it perfect for personal boilerplates and enforcing team-wide standards.
 
@@ -23,16 +23,16 @@ It works seamlessly with both local and remote JSON configurations, making it pe
 
 ## 💻 Installation
 
-Install Scaflo globally to use the `scaflo` command anywhere:
+Install Evoo globally to use the `evoo` command anywhere:
 
 ```bash
-npm install -g scaflo
+npm install -g evoo
 ```
 
 Or run it directly without a global installation using `npx`:
 
 ```bash
-npx scaflo@latest <jsonPath>
+npx evoo@latest <jsonPath>
 ```
 
 -----
@@ -42,7 +42,7 @@ npx scaflo@latest <jsonPath>
 ### **Basic Command**
 
 ```bash
-scaflo <source> [options]
+evoo <source> [options]
 ```
 
   - `<source>`: The path to a local `.json` file or a URL to a remote one.
@@ -57,9 +57,9 @@ scaflo <source> [options]
 
 -----
 
-## 📄 The `scaflo.json` Structure
+## 📄 The `evoo.json` Structure
 
-The power of Scaflo comes from its JSON structure. At its core, it's a list of **jobs** to be executed in order.
+The power of Evoo comes from its JSON structure. At its core, it's a list of **jobs** to be executed in order.
 
 ### **Root Properties**
 
@@ -69,7 +69,7 @@ The power of Scaflo comes from its JSON structure. At its core, it's a list of *
 | `description`        | `string`   | A brief description of what the scaffold does.              |
 | `dependencies`       | `string[]` | A list of npm packages to install at the start.             |
 | `registryDependencies` | `string[]` | A list of registry components (e.g., shadcn/ui) to install. |
-| `jobs`               | `Job[]`    | The array of jobs to execute sequentially. This is the heart of Scaflo. |
+| `jobs`               | `Job[]`    | The array of jobs to execute sequentially. This is the heart of Evoo. |
 | `definitions`        | `Record<string, Except<Job, "when">>`    | A collection of reusable job definitions that can be referenced. ([see `run`](#run) below) |
 
 ### **The Job Object**
@@ -226,7 +226,7 @@ A `when` expression determines if a job should run. It can access any stored var
 
 2.  **Value Comparison**: Compares a job's result to a specific value.
 
-      - **Note**: Use loose equality operators (`==`, `!=`) in the JSON. Scaflo's engine will execute them as **strict** (`===`, `!==`) comparisons at runtime.
+      - **Note**: Use loose equality operators (`==`, `!=`) in the JSON. Evoo's engine will execute them as **strict** (`===`, `!==`) comparisons at runtime.
       - `"#framework == 'react'"`: Runs if the `framework` result is strictly `'react'`.
       - `"@project.linter == true"`: Runs if the nested `linter` value is the boolean `true`.
 
@@ -305,27 +305,27 @@ Ask for a component name and use it to generate a file with the correct name and
 
 ## 🔒 Configuration & Authentication
 
-Scaflo can store a GitHub personal access token to fetch configurations from private repositories.
+Evoo can store a GitHub personal access token to fetch configurations from private repositories.
 
 ### **Set a Value**
 
 ```bash
 # Set your GitHub token
-scaflo set githubToken ghp_abcdef123456
+evoo set githubToken ghp_abcdef123456
 ```
 
 ### **Get a Value**
 
 ```bash
 # View the currently stored token
-scaflo get githubToken
+evoo get githubToken
 ```
 
 -----
 
 ## 🤝 Contributing
 
-Contributions are welcome\! Please feel free to open an issue or submit a pull request on [GitHub](https://github.com/programming-with-ia/scaflo).
+Contributions are welcome\! Please feel free to open an issue or submit a pull request on [GitHub](https://github.com/programming-with-ia/evoo).
 
 ## 📄 License
 

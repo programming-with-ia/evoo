@@ -278,8 +278,8 @@ export function evaluateWhen(expression: string, context: Context): boolean {
 //         },
 //         settings: {
 //             isMaintenanceMode: false, // A falsy boolean
-//             scaflo: { styleColor: "green" },
-//             "scaflo-styleColor": "green",
+//             evoo: { styleColor: "green" },
+//             "evoo-styleColor": "green",
 //             apiVersion: 2,
 //         },
 //         callbacks: {
@@ -290,8 +290,8 @@ export function evaluateWhen(expression: string, context: Context): boolean {
 //     return evaluateWhen(expression, context);
 // }
 
-// console.log(`${Demo("@scaflo.styleColor=='green'")}`); // true
-// console.log(`${Demo("@scaflo-styleColor=='green'")}`); // true
+// console.log(`${Demo("@evoo.styleColor=='green'")}`); // true
+// console.log(`${Demo("@evoo-styleColor=='green'")}`); // true
 
 // console.log("--- Original Functionality (Unaffected) ---");
 // console.log(`'isValidUser(#userRole) && !@isMaintenanceMode' is: ${Demo("isValidUser(#userRole) && !@isMaintenanceMode")}`); // true

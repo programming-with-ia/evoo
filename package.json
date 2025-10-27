@@ -1,5 +1,5 @@
 {
-  "name": "scaflo",
+  "name": "evoo",
   "version": "1.0.0-alpha.6",
   "description": "",
   "main": "index.js",
@@ -17,10 +17,10 @@
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/programming-with-ia/scaflo.git"
+    "url": "https://github.com/programming-with-ia/evoo.git"
   },
   "bin": {
-    "scaflo": "./dist/index.js"
+    "evoo": "./dist/index.js"
   },
   "files": [
     "dist",
@@ -44,13 +44,13 @@
     "ora": "^8.2.0"
   },
   "devDependencies": {
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3",
     "@biomejs/biome": "^2.2.6",
     "@types/fs-extra": "^11.0.4",
     "jsonc-parser": "^3.3.1",
-    "scaflo": "^0.0.4",
+    "release-it": "^19.0.5",
+    "tsup": "^8.3.6",
+    "tsx": "^4.20.6",
     "type-fest": "^5.1.0",
-    "release-it": "^19.0.5"
+    "typescript": "^5.7.3"
   }
 }
