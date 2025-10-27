@@ -1,5 +1,6 @@
 import { execa, type StdinOption } from "execa";
 import fs from "fs-extra";
+import path from "path";
 import { logger } from "./logger";
 import { type PackageManager, getUserPkgManager } from "./getUserPkgManager";
 import { globals as G } from "./globals";
@@ -15,6 +16,8 @@ import { JsonStructure } from "../types";
 export const installDependencies = async (
     packages: NonNullable<JsonStructure["dependencies"]>,
     dev: boolean = false,
+    cwd: string = process.cwd(),
+    isGlobal: boolean = false,
 ) => {
     // Convert input into an array of package install strings
 
@@ -24,9 +27,15 @@ export const installDependencies = async (
     
     logger.warn("This feature is not fully tested for all package managers.");
 
-    const pkgManager = getUserPkgManager();
+    const pkgManager = isGlobal ? "npm" : getUserPkgManager();
 
-    const packageJson = fs.readJsonSync("package.json", { encoding: "utf-8" });
+    const packageJsonPath = path.join(cwd, "package.json");
+    if (!fs.existsSync(packageJsonPath)) {
+        logger.error(`package.json not found in directory: ${cwd}`);
+        return;
+    }
+
+    const packageJson = fs.readJsonSync(packageJsonPath, { encoding: "utf-8" });
     // Combine all dependency types into a single object for easy lookup
     const allDependencies = {
         ...packageJson.dependencies,
@@ -70,17 +79,17 @@ export const installDependencies = async (
         }
 
         const devFlag = dev ? ["-D"] : [];
+        const execOptions = { cwd, stderr: "inherit" };
+
         switch (pkgManager) {
             case "npm":
-                await execa(pkgManager, ["install", ...filteredPackages, ...devFlag], {
-                    cwd: process.cwd(),
-                    stderr: "inherit",
-                });
+                await execa(pkgManager, ["install", ...filteredPackages, ...devFlag], execOptions);
                 return null;
 
             case "pnpm":
                 return execWithSpinner(pkgManager, {
                     args: ["add", ...filteredPackages, ...devFlag],
+                    cwd,
                     onDataHandle: () => (data) => {
                         const text = data.toString();
                         if (text.includes("Progress")) {
@@ -96,6 +105,7 @@ export const installDependencies = async (
             case "yarn":
                 return execWithSpinner(pkgManager, {
                     args: ["add", ...filteredPackages, ...devFlag],
+                    cwd,
                     onDataHandle: () => (data) => {
                         logger.log(data.toString());
                     },
@@ -104,6 +114,7 @@ export const installDependencies = async (
             case "bun":
                 return execWithSpinner(pkgManager, {
                     args: ["add", ...filteredPackages, ...devFlag],
+                    cwd,
                     stdout: "ignore",
                 });
         }
@@ -119,6 +130,7 @@ const execWithSpinner = async (
         startMessage?: string;
         successMessage?: string;
         args?: string[];
+        cwd?: string;
         stdout?: "pipe" | "ignore" | "inherit";
         onDataHandle?: () => (data: Buffer) => void;
     },
@@ -126,6 +138,7 @@ const execWithSpinner = async (
     const {
         onDataHandle,
         args,
+        cwd = process.cwd(),
         stdout = "pipe",
         startMessage,
         successMessage,
@@ -134,7 +147,7 @@ const execWithSpinner = async (
     G.spinner.text = startMessage ?? `Running ${pkgManager} install <deps>...`;
     logger.info(G.spinner.text);
 
-    const subprocess = execa(pkgManager, args, { cwd: process.cwd(), stdout });
+    const subprocess = execa(pkgManager, args, { cwd, stdout });
 
     await new Promise<void>((res, rej) => {
         if (onDataHandle) {
@@ -155,6 +168,7 @@ const execWithSpinner = async (
         });
     });
 };
+
 /**
  * Adds one or more shadcn-ui components, showing a spinner during execution.
  *
