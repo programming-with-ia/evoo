@@ -1,13 +1,13 @@
 import { logger, type Plugin, sharedData } from "@evoo/core";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
 
-const loadedPlugins = new Map<string, Plugin>();
+const loadedPlugins = new Map<string, Plugin<any, any>>();
 
 export function isPluginLoaded(pluginName: string): boolean {
     return loadedPlugins.has(pluginName);
 }
 
-export function registerPlugin(pluginName: string, plugin: Plugin): void {
+export function registerPlugin(pluginName: string, plugin: Plugin<any, any>): void {
     if (loadedPlugins.has(pluginName)) {
         logger.warn(`Plugin '${pluginName}' is already loaded.`);
         return;
@@ -60,10 +60,10 @@ export async function loadPlugin(pluginName: string): Promise<void> {
 
 export function getJobExecutor(
     jobType: string,
-): ((job: any) => Promise<void>) | null {
+): ((job: any, sharedContext: any) => Promise<void>) | null {
     for (const plugin of Array.from(loadedPlugins.values())) {
         if (jobType in plugin.jobs) {
-            return plugin.jobs[jobType];
+            return plugin.jobs[jobType] as any;
         }
     }
     return null;

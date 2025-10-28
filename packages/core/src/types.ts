@@ -190,7 +190,10 @@ type JobsGroup<T extends Record<string, unknown> = never> = {
 /**
  * Defines the root structure for a scaffold configuration file.
  */
-type JsonStructure<T extends Record<string, unknown> = never> = {
+type JsonStructure<
+    T extends Record<string, unknown> = never,
+    C extends Record<string, unknown> = Record<string, unknown>,
+> = {
     /** The internal name of the scaffold. */
     name?: string;
     /** A user-friendly title for the scaffold. */
@@ -219,6 +222,12 @@ type JsonStructure<T extends Record<string, unknown> = never> = {
      * @example ["evoo-plugin-git", "evoo-plugin-folder@1.0.0"]
      */
     plugins?: string[];
+
+    /**
+     * A shared data object that is passed to all plugin job executors.
+     * This allows plugins to access and modify a common set of data.
+     */
+    sharedContext?: C;
 };
 
 /**

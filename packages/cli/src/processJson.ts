@@ -53,6 +53,7 @@ export async function processJson(jsonPath: string): Promise<void> {
         jobs: jsonData.jobs,
         basePath,
         definitions: jsonData.definitions,
+        sharedContext: jsonData.sharedContext,
     });
 
     //* handling dependencies
@@ -79,17 +80,19 @@ async function processJobs({
     jobs,
     basePath,
     definitions,
+    sharedContext,
 }: {
     jobs?: Job[];
     basePath: string;
     definitions?: JsonStructure["definitions"];
+    sharedContext?: Record<string, unknown>;
 }) {
     if (!jobs) {
         return;
     }
 
     for (const job of jobs) {
-        await processJob({ job, basePath, definitions });
+        await processJob({ job, basePath, definitions, sharedContext });
     }
 }
 
@@ -97,10 +100,12 @@ async function processJob({
     job,
     basePath,
     definitions,
+    sharedContext,
 }: {
     job: Job;
     basePath: string;
     definitions?: JsonStructure["definitions"];
+    sharedContext?: Record<string, unknown>;
 }) {
     const { when, id, confirm } = job;
 
@@ -209,7 +214,11 @@ async function processJob({
                 ignoreExist: true,
             })) as string;
         }
-        await processJobs({ jobs: job.jobs, basePath: _basePath });
+        await processJobs({
+            jobs: job.jobs,
+            basePath: _basePath,
+            sharedContext,
+        });
     } else if (job.type === "registryDependencies") {
         if (typeof job.registryDependencies === "string") {
             job.registryDependencies = [job.registryDependencies];
@@ -239,6 +248,7 @@ async function processJob({
                 job: definitions![job.target] as Job,
                 basePath,
                 definitions,
+                sharedContext,
             });
         } else {
             logger.warn(`Job not found: ${job.target}`);
@@ -248,7 +258,7 @@ async function processJob({
     } else {
         const jobExecutor = getJobExecutor(job.type);
         if (jobExecutor) {
-            await jobExecutor(job);
+            await jobExecutor(job, sharedContext);
         } else {
             throw new Error(`Invalid job type '${job.type}'`);
         }
