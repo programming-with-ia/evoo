@@ -33,8 +33,8 @@ export async function loadPlugin(pluginName: string): Promise<void> {
                 throw new Error(`Failed to resolve plugin '${pluginName}' after installation.`);
             }
         } catch (installError) {
-            logger.error(`Failed to install or load plugin '${pluginName}':`, installError);
-            return;
+            logger.error(`Failed to install plugin '${pluginName}'.`);
+            throw installError;
         }
     }
 
