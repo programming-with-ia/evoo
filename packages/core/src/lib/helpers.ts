@@ -23,7 +23,7 @@ export function withSpinner<T extends (...args: any[]) => any>(fn: T): T {
             G.spinner.stop();
         }
 
-        let result;
+        let result: unknown;
         try {
             result = fn(...args);
             if (result instanceof Promise) {
@@ -33,7 +33,7 @@ export function withSpinner<T extends (...args: any[]) => any>(fn: T): T {
                     }
                 }) as ReturnType<T>;
             }
-            return result;
+            return result as ReturnType<T>;
         } finally {
             if (!(result instanceof Promise) && spinning) {
                 G.spinner.start(t);

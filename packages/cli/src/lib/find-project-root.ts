@@ -19,10 +19,8 @@ export async function findProjectRoot(
         if (fs.existsSync(packageJsonPath)) {
             const packageJson = await fs.readJson(packageJsonPath);
             if (
-                (packageJson.dependencies &&
-                    packageJson.dependencies["@evoo/cli"]) ||
-                (packageJson.devDependencies &&
-                    packageJson.devDependencies["@evoo/cli"])
+                packageJson.dependencies?.["@evoo/cli"] ||
+                packageJson.devDependencies?.["@evoo/cli"]
             ) {
                 cachedProjectRoot = currentDir;
                 return currentDir;

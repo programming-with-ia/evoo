@@ -1,7 +1,7 @@
-import type { Job } from "./types";
-
-// Every custom job type should at least have a `type` property.
-type CustomJobType = { type: string } & Record<string, unknown>;
+/**
+ * Every custom job type should at least have a `type` property.
+ */
+export type CustomJobType = { type: string } & Record<string, unknown>;
 
 type JobExecutor<T> = (job: T) => Promise<void>;
 
@@ -14,9 +14,7 @@ type JobMap<T extends Record<string, CustomJobType>> = {
  * A plugin allows extending the functionality of the CLI tool
  * by adding new job types.
  */
-export type Plugin<
-    T extends Record<string, CustomJobType> = Record<string, any>,
-> = {
+export type Plugin<T extends Record<string, CustomJobType>> = {
     /**
      * A map of job definitions provided by the plugin.
      * The key is the job type, and the value is a function
@@ -30,7 +28,4 @@ export type Plugin<
     onComplete?: () => Promise<void>;
 };
 
-export type PluginJobs<T extends Plugin<Record<string, any>>> =
-    T extends Plugin<infer R> ? Values<R> : never;
-
-type Values<T> = T[keyof T];
+export type PluginJobs<T> = T extends Plugin<infer R> ? R[keyof R] : never;

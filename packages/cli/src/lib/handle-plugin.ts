@@ -61,7 +61,7 @@ export async function resolvePlugin(
     const require = createRequire(path.join(pluginDir, "index.js")); // Hack to get a base path for require
     try {
         return require.resolve(pluginName);
-    } catch (e) {
+    } catch (_e) {
         return null;
     }
 }

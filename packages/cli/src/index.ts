@@ -2,7 +2,6 @@
 import {
     addShadcnComponents,
     type CliOptions,
-    Consts,
     config,
     globals as G,
     installDependencies,

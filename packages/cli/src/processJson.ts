@@ -171,7 +171,7 @@ async function processJob({
                 message: question,
                 defaultValue: defaultValue,
                 placeholder: defaultValue
-                    ? "default: " + defaultValue
+                    ? `default: ${defaultValue}`
                     : undefined,
             });
         } else if (questionType === "confirm") {
