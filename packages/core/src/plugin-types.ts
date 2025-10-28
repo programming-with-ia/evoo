@@ -21,6 +21,11 @@ export type Plugin<T extends Record<string, CustomJobType> = Record<string, any>
      * that executes the job.
      */
     jobs: JobMap<T>;
+    /**
+     * An optional callback function that is executed after the main
+     * JSON processing is complete.
+     */
+    onComplete?: () => Promise<void>;
 };
 
 export type PluginJobs<T extends Plugin<Record<string, any>>> =

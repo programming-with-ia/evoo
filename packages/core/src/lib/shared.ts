@@ -9,12 +9,14 @@ export const sharedData: {
     // Done for simple jobs like dependencies done, file done
     jobResults: Record<string, string>;
     storedData: Record<string, string>;
+    onCompleteCallbacks: (() => Promise<void>)[];
 } = {
     nodeDependencies: [],
     registryDependencies: [],
     cliOptions: {},
     jobResults: {},
     storedData: {},
+    onCompleteCallbacks: [],
 };
 
 export function getValueFromSource(

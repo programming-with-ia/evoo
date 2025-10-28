@@ -49,6 +49,10 @@ program
 
             await processJson(jsonPath);
 
+            for (const callback of sharedData.onCompleteCallbacks) {
+                await callback();
+            }
+
             if (Object.keys(sharedData.storedData).length > 0) {
                 fs.writeJsonSync(
                     path.join(process.cwd(), storeFile),

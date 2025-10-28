@@ -1,4 +1,4 @@
-import { Plugin, prompts } from "@evoo/core";
+import { Plugin, prompts, sharedData } from "@evoo/core";
 import { logger } from "@evoo/core";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
 
@@ -12,6 +12,9 @@ export function registerPlugin(pluginName: string, plugin: Plugin): void {
     if (loadedPlugins.has(pluginName)) {
         logger.warn(`Plugin '${pluginName}' is already loaded.`);
         return;
+    }
+    if (plugin.onComplete) {
+        sharedData.onCompleteCallbacks.push(plugin.onComplete);
     }
     loadedPlugins.set(pluginName, plugin);
 }
