@@ -149,11 +149,11 @@ type ForJob<
  * Represents a single executable task (a "job") within the scaffold process.
  * This is a union of all possible job types.
  */
-type Job =
+type Job<T extends Record<string, unknown> = never> =
     /** Prompts the user for input. An `id` is required to store and reference the answer. If a stored value with the same ID exists, the question is skipped. */
     | SetRequired<ForJob<Questions, "question">, "id">
     /** A container for a nested sequence of jobs. */
-    | ForJob<JobsGroup, "group">
+    | ForJob<JobsGroup<T>, "group">
     /** Installs dependencies from a UI component registry (e.g., shadcn/ui). A `when` condition is required. */
     | SetRequired<
           ForJob<
@@ -178,15 +178,16 @@ type Job =
               message: string;
           },
           "log"
-      >;
+      >
+    | T;
 
 /**
  * Defines a group of jobs that can be executed together, often sharing a
  * common context like a base path.
  */
-type JobsGroup = {
+type JobsGroup<T extends Record<string, unknown> = never> = {
     /** An array of `Job` objects to be executed sequentially. */
-    jobs: Job[];
+    jobs: Job<T>[];
     /** An optional base path that prefixes all file paths within this group. */
     base?: string;
 };
@@ -194,7 +195,7 @@ type JobsGroup = {
 /**
  * Defines the root structure for a scaffold configuration file.
  */
-type JsonStructure = {
+type JsonStructure<T extends Record<string, unknown> = never> = {
     /** The internal name of the scaffold. */
     name?: string;
     /** A user-friendly title for the scaffold. */
@@ -212,12 +213,12 @@ type JsonStructure = {
     /**
      * The primary array of jobs to be executed by the scaffolder.
      */
-    jobs?: Job[];
+    jobs?: Job<T>[];
 
     /**
      * A collection of reusable job definitions that can be referenced.
      */
-    definitions?: Record<string, Except<Job, "when">>;
+    definitions?: Record<string, Except<Job<T>, "when">>;
     /**
      * A list of plugins to load.
      * @example ["evoo-plugin-git", "evoo-plugin-folder@1.0.0"]
