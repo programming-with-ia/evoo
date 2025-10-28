@@ -1,4 +1,4 @@
-import { Plugin } from "@evoo/core";
+import { Plugin, prompts } from "@evoo/core";
 import { logger } from "@evoo/core";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
 
@@ -24,6 +24,16 @@ export async function loadPlugin(pluginName: string): Promise<void> {
     let pluginPath = await resolvePlugin(pluginName);
 
     if (!pluginPath) {
+        //!
+        // if (
+        //     (await prompts.confirm({
+        //         message: `Do you want to install plugin '${pluginName}'?`,
+        //         initialValue: true,
+        //     })) !== true
+        // ) {
+        //     return;
+        // }
+
         logger.warn(`Plugin '${pluginName}' not found. Attempting to install it...`);
         try {
             await installPlugin(pluginName);
