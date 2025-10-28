@@ -1,3 +1,4 @@
+export * from "./lib/exec";
 export * from "./lib/fetch";
 export * from "./lib/getUserPkgManager";
 export * from "./lib/globals";

@@ -1,0 +1,22 @@
+{
+  "name": "@evoo/plugin-exec",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "biome lint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@evoo/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}
