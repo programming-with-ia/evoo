@@ -2,7 +2,7 @@ import * as p from "@clack/prompts";
 import { withSpinner } from "./helpers";
 import { logger } from "./logger";
 
-export function withHandleCancel<T extends (...args: any[]) => Promise<any>>(
+function withHandleCancel<T extends (...args: any[]) => Promise<any>>(
   fn: T
 ): T {
   return (async (...args: Parameters<T>): Promise<ReturnType<T>> => {

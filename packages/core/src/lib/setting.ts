@@ -45,4 +45,4 @@ class ConfigManager<T extends Record<string, unknown>, Config = Partial<T>> {
   }
 }
 
-export const config = new ConfigManager<Settings>(".scaflo-config");
+export const config = new ConfigManager<Settings>(".evoo-config");

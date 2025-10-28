@@ -1,16 +1,16 @@
 --- PACKAGE SUMMARY ---
-Package Name: Scaflo
+Package Name: Evoo
 Type: Command-Line Interface (CLI) Tool
 Primary Language: JavaScript/Node.js
 Core Function: A job-based CLI tool for automating project scaffolding. It reads a local or remote JSON file that defines a sequence of tasks (jobs) to execute.
 Key Features: Conditional logic, user prompts (questions), state management (session and persistent), dynamic file path/content generation, dependency installation (npm and registry-based like shadcn/ui), and support for private GitHub repositories.
 
 --- CLI USAGE ---
-Installation (Global): npm install -g scaflo
-Execution (without install): npx scaflo@latest <jsonPath>
+Installation (Global): npm install -g evoo
+Execution (without install): npx evoo@latest <jsonPath>
 
-Base Command: scaflo <source> [options]
-- <source>: Required. A URL or local file path to the scaflo.json configuration file.
+Base Command: evoo <source> [options]
+- <source>: Required. A URL or local file path to the evoo.json configuration file.
 
 CLI Options:
 - --dir, -d: Sets the working directory where the scaffolding operations will be performed.
@@ -19,12 +19,12 @@ CLI Options:
 
 --- CONFIGURATION COMMANDS ---
 Purpose: To manage configuration values, such as a GitHub personal access token for private repositories.
-- Set a value: scaflo set <key> <value>
-  - Example: scaflo set githubToken ghp_yourtoken123
-- Get a value: scaflo get <key>
-  - Example: scaflo get githubToken
+- Set a value: evoo set <key> <value>
+  - Example: evoo set githubToken ghp_yourtoken123
+- Get a value: evoo get <key>
+  - Example: evoo get githubToken
 
---- SCAFLO.JSON STRUCTURE ---
+--- evoo.json STRUCTURE ---
 
 **Root Properties:**
 - name (string): The name of the scaffold.

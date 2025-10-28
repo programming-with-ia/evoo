@@ -218,6 +218,11 @@ type JsonStructure = {
      * A collection of reusable job definitions that can be referenced.
      */
     definitions?: Record<string, Except<Job, "when">>;
+    /**
+     * A list of plugins to load.
+     * @example ["evoo-plugin-git", "evoo-plugin-folder@1.0.0"]
+     */
+    plugins?: string[];
 };
 
 /**

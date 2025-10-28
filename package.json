@@ -1,56 +1,28 @@
 {
-  "name": "scaflo",
+  "name": "evoo-monorepo",
   "version": "1.0.0-alpha.6",
+  "private": true,
   "description": "",
   "main": "index.js",
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "tsup && tsx ./scripts/transform.ts",
-    "dev": "tsup --watch",
-    "start": "node dist/index.js",
-    "dev:start": "tsx src/index.ts",
+    "typecheck": "turbo typecheck",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "start": "pnpm --filter @evoo/cli start",
+    "dev:start": "pnpm --filter @evoo/cli dev:start",
     "release": "pnpm release-it"
   },
-  "type": "module",
-  "exports": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/programming-with-ia/scaflo.git"
-  },
-  "bin": {
-    "scaflo": "./dist/index.js"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md",
-    "pnpm-lock.yaml",
-    "package.json",
-    "types.d.ts",
-    "schema.json"
-  ],
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "@clack/prompts": "^0.10.0",
-    "chalk": "^5.4.1",
-    "commander": "^13.1.0",
-    "execa": "^9.1.0",
-    "fs-extra": "^11.3.0",
-    "ora": "^8.2.0"
-  },
+  "packageManager": "pnpm@10.18.2",
   "devDependencies": {
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3",
     "@biomejs/biome": "^2.2.6",
-    "@types/fs-extra": "^11.0.4",
-    "jsonc-parser": "^3.3.1",
-    "scaflo": "^0.0.4",
+    "release-it": "^19.0.5",
+    "tsup": "^8.3.6",
+    "tsx": "^4.20.6",
+    "turbo": "^2.5.8",
     "type-fest": "^5.1.0",
-    "release-it": "^19.0.5"
+    "typescript": "^5.7.3"
   }
 }

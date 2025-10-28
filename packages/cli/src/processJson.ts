@@ -1,16 +1,23 @@
 import fs from "fs-extra";
 import path from "path";
-import { logger } from "./lib/logger";
-import { Consts, globals as G } from "./lib/globals";
-import { isValidUrl } from "./lib/helpers";
-import { handleFilePath } from "./lib/handlePath";
-import { Fetch } from "./lib/fetch";
-import { getValueFromSource, sharedData } from "./lib/shared";
-import type { FileType, Job, JsonStructure } from "./types";
+import {
+    logger,
+    Consts,
+    globals as G,
+    isValidUrl,
+    handleFilePath,
+    Fetch,
+    getValueFromSource,
+    sharedData,
+    FileType,
+    Job,
+    JsonStructure,
+    prompts,
+    parseVar,
+    setDeepValue,
+} from "@evoo/core";
 import { evaluateWhen } from "./lib/evaluateWhen";
-import { prompts } from "./lib/prompts";
-import { parseVar } from "./lib/match-vars";
-import { setDeepValue } from "./lib/utils";
+import { loadPlugin, getJobExecutor } from "./lib/pluginManager";
 
 export async function processJson(jsonPath: string): Promise<void> {
     //
@@ -25,6 +32,12 @@ export async function processJson(jsonPath: string): Promise<void> {
         jsonData = await Fetch<JsonStructure>(jsonPath, "json");
     } else {
         jsonData = fs.readJsonSync(path.resolve(jsonPath));
+    }
+
+    if (jsonData.plugins) {
+        for (const pluginName of jsonData.plugins) {
+            await loadPlugin(pluginName);
+        }
     }
 
     const basePath = (
@@ -233,7 +246,12 @@ async function processJob({
     } else if (job.type === "log") {
         logger[job.logLevel ?? "log"](job.message);
     } else {
-        throw new Error(`Invalid job type '${job.type}'`);
+        const jobExecutor = getJobExecutor(job.type);
+        if (jobExecutor) {
+            await jobExecutor(job);
+        } else {
+            throw new Error(`Invalid job type '${job.type}'`);
+        }
     }
 
     if (id) {
