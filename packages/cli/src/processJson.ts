@@ -19,7 +19,9 @@ import path from "path";
 import { evaluateWhen } from "./lib/evaluateWhen";
 import { getJobExecutor, loadPlugin } from "./lib/pluginManager";
 
-export async function processJson(jsonPath: string): Promise<void> {
+export async function processJson(
+    jsonPath: string,
+): Promise<Record<string, unknown> | undefined> {
     //
     // handle json local or remote file
     G.spinner.text = `Processing Json Data: ${jsonPath}`;
@@ -39,6 +41,11 @@ export async function processJson(jsonPath: string): Promise<void> {
             await loadPlugin(pluginName);
         }
     }
+
+    for (const cb of sharedData.onStartCallbacks) {
+        await cb(jsonData.sharedContext);
+    }
+    sharedData.onStartCallbacks = [];
 
     const basePath = (
         cliOptions.extendPath
@@ -74,6 +81,8 @@ export async function processJson(jsonPath: string): Promise<void> {
     if (jsonData.registryDependencies) {
         sharedData.registryDependencies.push(...jsonData.registryDependencies);
     }
+
+    return jsonData.sharedContext;
 }
 
 async function processJobs({
@@ -245,6 +254,7 @@ async function processJob({
     } else if (job.type === "run") {
         if (Object.keys(definitions ?? {}).includes(job.target)) {
             await processJob({
+                // biome-ignore lint/style/noNonNullAssertion: This is a valid use case
                 job: definitions![job.target] as Job,
                 basePath,
                 definitions,

@@ -1,5 +1,5 @@
 // --- Type Definitions ---
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: This is a generic evaluator */
 
 import { getDeepValue } from "@evoo/core";
 

@@ -25,14 +25,28 @@ export type Plugin<
      */
     jobs: JobMap<T, C>;
     /**
+     * An optional callback function that is executed before the main
+     * JSON processing begins.
+     */
+    onStart?: (sharedContext: C) => Promise<void>;
+    /**
      * An optional callback function that is executed after the main
      * JSON processing is complete.
      */
-    onComplete?: () => Promise<void>;
+    onComplete?: (sharedContext: C) => Promise<void>;
+    /**
+     * An optional callback function that is executed after dependency
+     * installation is complete.
+     */
+    onDone?: (sharedContext: C) => Promise<void>;
 };
 
 export type PluginJobs<T> = T extends Plugin<infer R> ? R[keyof R] : never;
 
-export type PluginSharedContext<T> = T extends Plugin<any, infer C>
+export type PluginSharedContext<T> = T extends Plugin<
+    // biome-ignore lint/suspicious/noExplicitAny: This is a generic type utility
+    any,
+    infer C
+>
     ? C
     : Record<string, unknown>;

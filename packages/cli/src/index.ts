@@ -46,10 +46,10 @@ program
                 );
             }
 
-            await processJson(jsonPath);
+            const sharedContext = await processJson(jsonPath);
 
-            for (const callback of sharedData.onCompleteCallbacks) {
-                await callback();
+            for (const cb of sharedData.onCompleteCallbacks) {
+                await cb(sharedContext);
             }
 
             if (Object.keys(sharedData.storedData).length > 0) {
@@ -62,6 +62,10 @@ program
             //! this feature is not fully tested for all package managers tested
             await installDependencies(sharedData.nodeDependencies);
             await addShadcnComponents(sharedData.registryDependencies);
+
+            for (const cb of sharedData.onDoneCallbacks) {
+                await cb(sharedContext);
+            }
 
             G.spinner.succeed("Files added successfully!");
         } catch (error) {

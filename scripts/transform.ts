@@ -1,6 +1,6 @@
+import path from "node:path";
 import fs from "fs-extra";
 import * as jsonc from "jsonc-parser";
-import path from "path";
 
 const projectRoot = process.cwd();
 const sourceDir = path.join(projectRoot, "test");

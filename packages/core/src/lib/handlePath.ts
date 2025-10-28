@@ -57,7 +57,8 @@ export async function handleFilePath({
         handler?: (value: string) => string | undefined;
     }) {
         const getFilePath = options?.base
-            ? (fname: string) => path.join(options.base!, fname)
+            ? // biome-ignore lint/style/noNonNullAssertion: This is a valid use case
+              (fname: string) => path.join(options.base!, fname)
             : makeFullFilePath;
 
         const newFileName = (await prompts.text({
@@ -94,6 +95,7 @@ export async function handleFilePath({
 
             const parsedVar = parseVar(current);
             if (parsedVar.match) {
+                // biome-ignore lint/style/noNonNullAssertion: This is a valid use case
                 current = getValueFromSource(
                     parsedVar.varName,
                     parsedVar.varType,
@@ -109,6 +111,7 @@ export async function handleFilePath({
                 const templateValue = _askTemplate.varName
                     ? getValueFromSource(
                           _askTemplate.varName,
+                          // biome-ignore lint/style/noNonNullAssertion: This is a valid use case
                           _askTemplate.varType!,
                       )
                     : undefined;

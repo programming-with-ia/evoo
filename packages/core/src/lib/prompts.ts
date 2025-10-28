@@ -2,6 +2,7 @@ import * as p from "@clack/prompts";
 import { withSpinner } from "./helpers";
 import { logger } from "./logger";
 
+// biome-ignore lint/suspicious/noExplicitAny: This is a generic function wrapper
 function withHandleCancel<T extends (...args: any[]) => Promise<any>>(
     fn: T,
 ): T {

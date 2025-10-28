@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noExplicitAny: This is a generic utility function
 export function getDeepValue<T>(obj: any, key: string): T | undefined {
     const keys = key.split(".");
 
@@ -9,6 +10,7 @@ export function getDeepValue<T>(obj: any, key: string): T | undefined {
     return value as T | undefined;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: This is a generic utility function
 export function setDeepValue(obj: any, key: string, value: any): void {
     const keys = key.split(".");
 
