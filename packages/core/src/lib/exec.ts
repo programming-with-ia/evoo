@@ -1,6 +1,6 @@
 import { execaCommand } from "execa";
-import { logger } from "./logger";
 import { globals as G } from "./globals";
+import { logger } from "./logger";
 
 /**
  * Executes command with Ora spinner.

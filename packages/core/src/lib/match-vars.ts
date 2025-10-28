@@ -8,7 +8,7 @@ export function parseVar(
 ):
     | { match: true; varName: string; varType: "store" | "memory" }
     | { match: false; varName?: never; varType?: never } {
-    const regex = /^<\s*([@#])\s*([\.a-zA-Z0-9_-]+)\s*>$/;
+    const regex = /^<\s*([@#])\s*([.a-zA-Z0-9_-]+)\s*>$/;
     const match = input.match(regex);
 
     if (match) {
@@ -39,7 +39,7 @@ export function parseAskCommand(commandString: string): {
     varType?: "memory" | "store";
 } {
     const askRegex =
-        /^<-\s*ask\s*(?:\|\s*([^|<>]+))?\s*(?:\|\s*(<[\#\@][a-zA-Z0-9._\-]+>))?\s*->$/;
+        /^<-\s*ask\s*(?:\|\s*([^|<>]+))?\s*(?:\|\s*(<[#@][a-zA-Z0-9._-]+>))?\s*->$/;
 
     const mainMatch = commandString.match(askRegex);
 

@@ -11,6 +11,12 @@ importers:
       '@biomejs/biome':
         specifier: ^2.2.6
         version: 2.2.6
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
+      fs-extra:
+        specifier: ^11.2.0
+        version: 11.3.0
       release-it:
         specifier: ^19.0.5
         version: 19.0.5(@types/node@22.13.5)

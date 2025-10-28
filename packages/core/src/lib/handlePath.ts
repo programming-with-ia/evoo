@@ -2,8 +2,8 @@ import fs from "fs-extra";
 import path from "path";
 
 import { Consts } from "./globals";
-import { prompts } from "./prompts";
 import { parseAskCommand, parseVar } from "./match-vars";
+import { prompts } from "./prompts";
 import { getValueFromSource } from "./shared";
 
 // return relative path
@@ -65,7 +65,7 @@ export async function handleFilePath({
             placeholder: options?.placeholder,
             defaultValue: options?.defaultName,
             validate: (input) => {
-                let fname = input.trim() || options?.defaultName; // use default name. example: <-ask | default.tsx->
+                const fname = input.trim() || options?.defaultName; // use default name. example: <-ask | default.tsx->
 
                 if (!fname) return "File name cannot be empty";
                 return options?.handler?.(getFilePath(fname));

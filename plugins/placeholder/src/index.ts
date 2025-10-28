@@ -1,20 +1,20 @@
-import { Plugin, logger } from "@evoo/core";
+import { logger, type Plugin } from "@evoo/core";
 
 type GreetJob = {
-  type: "greet";
-  message?: string;
+    type: "greet";
+    message?: string;
 };
 
 const placeholderPlugin: Plugin<{ greet: GreetJob }> = {
-  jobs: {
-    greet: async (job) => {
-      logger.info("Hello from the placeholder plugin!");
+    jobs: {
+        greet: async (job) => {
+            logger.info("Hello from the placeholder plugin!");
 
-      if (job.message) {
-        logger.log(`Your message is: ${job.message}`);
-      }
+            if (job.message) {
+                logger.log(`Your message is: ${job.message}`);
+            }
+        },
     },
-  },
 };
 
 export default placeholderPlugin;

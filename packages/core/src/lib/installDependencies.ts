@@ -1,12 +1,12 @@
 import { execa } from "execa";
 import fs from "fs-extra";
 import path from "path";
-import { logger } from "./logger";
+import type { JsonStructure } from "../types";
+import { execWithSpinner } from "./exec";
 import { getUserPkgManager } from "./getUserPkgManager";
 import { globals as G } from "./globals";
+import { logger } from "./logger";
 import { prompts } from "./prompts";
-import { JsonStructure } from "../types";
-import { execWithSpinner } from "./exec";
 
 // https://github.com/shadcn-ui/ui/blob/c9311f26fab488330e5ab349a347a1119d133be5/packages/shadcn/src/mcp/utils.ts#L9
 // https://github.com/shadcn-ui/ui/blob/c9311f26fab488330e5ab349a347a1119d133be5/packages/shadcn/src/mcp/utils.ts#L48
@@ -85,31 +85,41 @@ export const installDependencies = async (
 
         switch (pkgManager) {
             case "npm":
-                await execa("npm", ["install", ...filteredPackages, devFlag], execOptions);
+                await execa(
+                    "npm",
+                    ["install", ...filteredPackages, devFlag],
+                    execOptions,
+                );
                 return null;
 
             case "pnpm":
-                return execWithSpinner(`pnpm add ${packagesString} ${devFlag}`, {
-                    cwd,
-                    onDataHandle: () => (data) => {
-                        const text = data.toString();
-                        if (text.includes("Progress")) {
-                            logger.log(
-                                text.includes("|")
-                                    ? (text.split(" | ")[1] ?? "")
-                                    : text,
-                            );
-                        }
+                return execWithSpinner(
+                    `pnpm add ${packagesString} ${devFlag}`,
+                    {
+                        cwd,
+                        onDataHandle: () => (data) => {
+                            const text = data.toString();
+                            if (text.includes("Progress")) {
+                                logger.log(
+                                    text.includes("|")
+                                        ? (text.split(" | ")[1] ?? "")
+                                        : text,
+                                );
+                            }
+                        },
                     },
-                });
+                );
 
             case "yarn":
-                return execWithSpinner(`yarn add ${packagesString} ${devFlag}`, {
-                    cwd,
-                    onDataHandle: () => (data) => {
-                        logger.log(data.toString());
+                return execWithSpinner(
+                    `yarn add ${packagesString} ${devFlag}`,
+                    {
+                        cwd,
+                        onDataHandle: () => (data) => {
+                            logger.log(data.toString());
+                        },
                     },
-                });
+                );
 
             case "bun":
                 return execWithSpinner(`bun add ${packagesString} ${devFlag}`, {

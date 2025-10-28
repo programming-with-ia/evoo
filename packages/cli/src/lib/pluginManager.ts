@@ -1,5 +1,4 @@
-import { Plugin, prompts, sharedData } from "@evoo/core";
-import { logger } from "@evoo/core";
+import { logger, type Plugin, sharedData } from "@evoo/core";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
 
 const loadedPlugins = new Map<string, Plugin>();
@@ -37,13 +36,17 @@ export async function loadPlugin(pluginName: string): Promise<void> {
         //     return;
         // }
 
-        logger.warn(`Plugin '${pluginName}' not found. Attempting to install it...`);
+        logger.warn(
+            `Plugin '${pluginName}' not found. Attempting to install it...`,
+        );
         try {
             await installPlugin(pluginName);
             pluginPath = await resolvePlugin(pluginName);
 
             if (!pluginPath) {
-                throw new Error(`Failed to resolve plugin '${pluginName}' after installation.`);
+                throw new Error(
+                    `Failed to resolve plugin '${pluginName}' after installation.`,
+                );
             }
         } catch (installError) {
             logger.error(`Failed to install plugin '${pluginName}'.`);
@@ -55,7 +58,9 @@ export async function loadPlugin(pluginName: string): Promise<void> {
     registerPlugin(pluginName, plugin.default);
 }
 
-export function getJobExecutor(jobType: string): ((job: any) => Promise<void>) | null {
+export function getJobExecutor(
+    jobType: string,
+): ((job: any) => Promise<void>) | null {
     for (const plugin of Array.from(loadedPlugins.values())) {
         if (jobType in plugin.jobs) {
             return plugin.jobs[jobType];

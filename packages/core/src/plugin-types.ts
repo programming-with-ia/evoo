@@ -14,7 +14,9 @@ type JobMap<T extends Record<string, CustomJobType>> = {
  * A plugin allows extending the functionality of the CLI tool
  * by adding new job types.
  */
-export type Plugin<T extends Record<string, CustomJobType> = Record<string, any>> = {
+export type Plugin<
+    T extends Record<string, CustomJobType> = Record<string, any>,
+> = {
     /**
      * A map of job definitions provided by the plugin.
      * The key is the job type, and the value is a function

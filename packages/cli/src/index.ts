@@ -1,21 +1,21 @@
 #!/usr/bin/env node
-import ora from "ora";
-import chalk from "chalk";
-import fs from "fs-extra";
-import path from "path";
-import { Command } from "commander";
 import {
-    logger,
-    Consts,
-    globals as G,
     addShadcnComponents,
-    installDependencies,
+    type CliOptions,
+    Consts,
     config,
+    globals as G,
+    installDependencies,
+    type JsonStructure,
+    logger,
+    type Settings,
     sharedData,
-    CliOptions,
-    JsonStructure,
-    Settings,
 } from "@evoo/core";
+import chalk from "chalk";
+import { Command } from "commander";
+import fs from "fs-extra";
+import ora from "ora";
+import path from "path";
 import { processJson } from "./processJson";
 
 const storeFile = ".evoo.json";
