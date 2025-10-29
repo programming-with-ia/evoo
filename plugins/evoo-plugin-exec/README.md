@@ -4,21 +4,22 @@ The Executor plugin for the Evoo CLI allows you to run shell commands as part of
 
 ## Features
 
-- **Command Execution**: Execute any shell command from within your `evoo.json` configuration.
-- **User Confirmation**: Prompts the user for confirmation before executing a command, ensuring that no command is run without explicit approval.
-- **Customizable Messages**: Allows you to set custom start and success messages for each command, providing clear feedback to the user.
+-   **Command Execution**: Execute any shell command from within your `evoo.json` configuration.
+-   **User Confirmation**: Prompts the user for confirmation before executing a command, ensuring that no command is run without explicit approval.
+-   **Customizable Messages**: Allows you to set custom start and success messages for each command, providing clear feedback to the user.
 
 ## Usage
 
-To use the Executor plugin, you will need to add an `exec` job to your `evoo.json` configuration file. This job allows you to specify the command you want to run, along with optional messages.
+To use the Executor plugin, you will need to add an `exec` job to your `evoo.json` configuration file.
 
-### `exec`
+### The `exec` Job
 
-The `exec` job has the following properties:
-
-- `command` (required): The shell command to be executed.
-- `startMessage` (optional): A message to display when the command starts.
-- `successMessage` (optional): A message to display when the command completes successfully.
+| Property | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `type` | `"exec"` | ✔️ | Specifies the job type. |
+| `command` | `string` | ✔️ | The shell command to be executed. |
+| `startMessage` | `string` | | A message to display when the command starts. |
+| `successMessage` | `string` | | A message to display when the command completes successfully. |
 
 #### Example
 

@@ -4,17 +4,22 @@ The Placeholder plugin is a template designed to serve as a starting point for c
 
 ## Features
 
-- **Job Implementation**: Showcases a basic `greet` job that logs a message to the console.
-- **Lifecycle Hooks**: Provides examples of how to use the `onStart`, `onComplete`, and `onDone` lifecycle hooks to execute code at different stages of the CLI's execution.
-- **Shared Context**: Demonstrates how to define and use a shared context to maintain state and share data across different parts of a plugin.
+-   **Job Implementation**: Showcases a basic `greet` job that logs a message to the console.
+-   **Lifecycle Hooks**: Provides examples of how to use the `onStart`, `onComplete`, and `onDone` lifecycle hooks to execute code at different stages of the CLI's execution.
+-   **Shared Context**: Demonstrates how to define and use a shared context to maintain state and share data across different parts of a plugin.
 
 ## Usage
 
 This plugin is not intended for direct use in production but rather as a template to be copied and modified. By examining its source code, you can gain a deeper understanding of the Evoo plugin architecture and learn how to build your own custom plugins.
 
-### `greet`
+### The `greet` Job
 
 The `greet` job logs a message from the shared context and an optional message provided in the job configuration.
+
+| Property | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `type` | `"greet"` | ✔️ | Specifies the job type. |
+| `message` | `string` | | A custom message that will be logged to the console. |
 
 #### Example
 

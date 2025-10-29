@@ -4,56 +4,71 @@ The Shadcn plugin for the Evoo CLI is a powerful tool designed to streamline the
 
 ## Features
 
-- **Automated Component Installation**: The plugin automatically installs the specified Shadcn components, handling the necessary CLI commands for you.
-- **Dependency Management**: It intelligently manages and deduplicates component dependencies, ensuring that each component is installed only once.
-- **Seamless Integration**: The plugin is designed to work seamlessly with the Evoo CLI's plugin architecture, providing a smooth and consistent developer experience.
+-   **Automated Component Installation**: The plugin automatically installs the specified Shadcn components, handling the necessary CLI commands for you.
+-   **Conditional Installation**: Use the `when` property on `registryDependencies` jobs to install components only when specific conditions are met.
+-   **Dynamic Dependency Resolution**: Leverage the `sharedContext` to allow other jobs or plugins to dynamically add components to the installation queue.
 
 ## Usage
 
-To use the Shadcn plugin, you will need to add a `registryDependencies` job to your `evoo.json` configuration file. This job allows you to specify the Shadcn components you want to install.
+There are two primary ways to specify which Shadcn components to install: the `registryDependencies` job and the `sharedContext.registryDependencies` property.
 
-### `registryDependencies`
+### 1. The `registryDependencies` Job
 
-The `registryDependencies` job accepts either a single component name or an array of component names.
+This is the most common method for installing components. It allows you to define a list of components to install and, crucially, allows you to use a `when` clause for conditional logic.
 
-#### Example
+| Property | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `type` | `"registryDependencies"` | ✔️ | Specifies the job type. |
+| `registryDependencies` | `string[]` or `string`| ✔️ | The name of the component(s) to install. |
+| `when` | `string` | | A conditional expression to control whether the components are installed. |
+
+**Example:**
 
 ```json
 {
   "plugins": ["shadcn"],
   "jobs": [
     {
+      "type": "question",
+      "id": "#use-dialog",
+      "questionType": "confirm",
+      "question": "Do you need a dialog component?"
+    },
+    {
       "type": "registryDependencies",
-      "registryDependencies": ["button", "card", "dialog"]
+      "when": "#use-dialog == true",
+      "registryDependencies": ["dialog", "button"]
     }
   ]
 }
 ```
 
-When you run the Evoo CLI with this configuration, the Shadcn plugin will automatically install the `button`, `card`, and `dialog` components using the appropriate command for your package manager.
+In this example, the `dialog` and `button` components will only be installed if the user answers "yes" to the prompt.
 
-### Using `sharedContext`
+### 2. Using `sharedContext.registryDependencies`
 
-In addition to the `registryDependencies` job, the Shadcn plugin also supports a `sharedContext.registryDependencies` property in your `evoo.json` file. This allows you to define a list of components to be installed from the shared context, which can be useful for more complex configurations where dependencies are determined dynamically.
+This is a more advanced mechanism that allows other plugins or complex job chains to dynamically add dependencies to the installation queue. The `shadcn` plugin will automatically detect and process any components listed in the `sharedContext.registryDependencies` array at the end of its lifecycle.
 
-#### Example
+**Example:**
+
+Imagine another plugin has a job that determines which UI components are needed based on user input, and it adds them to the shared context.
 
 ```json
 {
-  "plugins": ["shadcn"],
+  "plugins": ["some-other-plugin", "shadcn"],
   "sharedContext": {
-    "registryDependencies": ["alert-dialog", "accordion"]
+    "registryDependencies": []
   },
-  "jobs": []
+  "jobs": [
+    {
+      "type": "some-other-plugin-job"
+    }
+  ]
 }
 ```
 
-In this example, the `alert-dialog` and `accordion` components will be installed, even though there are no `registryDependencies` jobs defined. The plugin will automatically pick up the dependencies from the shared context.
+If `some-other-plugin-job` populates `sharedContext.registryDependencies` with `["card", "avatar"]`, the `shadcn` plugin will automatically install them, even without a dedicated `registryDependencies` job.
 
 ## Prerequisites
 
 Before using the Shadcn plugin, you must have `components.json` present in your project's root directory. If this file is missing, the plugin will display an error message prompting you to run `npx shadcn-ui@latest init` to initialize your project.
-
-## How It Works
-
-The plugin collects all the component dependencies from the `registryDependencies` jobs and any shared context data. It then removes any duplicates and installs the unique components using the `shadcn-ui` CLI. The plugin automatically detects your package manager and uses the appropriate command (`pnpm`, `yarn`, `bun`, or `npm`) to install the components.
