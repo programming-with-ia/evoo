@@ -137,6 +137,19 @@ importers:
         specifier: ^5.3.3
         version: 5.7.3
 
+  plugins/shadcn:
+    dependencies:
+      '@evoo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+    devDependencies:
+      tsup:
+        specifier: ^8.0.1
+        version: 8.3.6(@swc/core@1.13.5)(jiti@2.6.1)(tsx@4.20.6)(typescript@5.7.3)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.7.3
+
 packages:
 
   '@biomejs/biome@2.2.6':

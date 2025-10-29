@@ -20,11 +20,6 @@
             "type": "string",
             "description": "A brief summary of what the scaffold does."
         },
-        "registryDependencies": {
-            "type": "array",
-            "items": { "type": "string" },
-            "description": "A list of UI registry dependencies (e.g., from shadcn/ui) to be installed."
-        },
         "dependencies": {
             "type": "array",
             "items": { "type": "string" },
@@ -61,7 +56,6 @@
             "oneOf": [
                 { "$ref": "#/$defs/questionJob" },
                 { "$ref": "#/$defs/groupJob" },
-                { "$ref": "#/$defs/registryDependenciesJob" },
                 { "$ref": "#/$defs/dependenciesJob" },
                 { "$ref": "#/$defs/runJob" },
                 { "$ref": "#/$defs/logJob" },
@@ -150,22 +144,6 @@
                 }
             ],
             "required": ["type"]
-        },
-        "registryDependenciesJob": {
-            "description": "Installs dependencies from a UI component registry. A `when` condition is required.",
-            "allOf": [
-                { "$ref": "#/$defs/jobBase" },
-                {
-                    "properties": {
-                        "type": { "const": "registryDependencies" },
-                        "registryDependencies": {
-                            "$ref": "#/$defs/stringOrArray"
-                        }
-                    },
-                    "required": ["registryDependencies"]
-                }
-            ],
-            "required": ["when", "type"]
         },
         "dependenciesJob": {
             "description": "Installs npm packages. A `when` condition is required.",

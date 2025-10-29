@@ -78,9 +78,6 @@ export async function processJson(
             }
         }
     }
-    if (jsonData.registryDependencies) {
-        sharedData.registryDependencies.push(...jsonData.registryDependencies);
-    }
 
     return jsonData.sharedContext;
 }
@@ -228,18 +225,6 @@ async function processJob({
             basePath: _basePath,
             sharedContext,
         });
-    } else if (job.type === "registryDependencies") {
-        if (typeof job.registryDependencies === "string") {
-            job.registryDependencies = [job.registryDependencies];
-        }
-        if (Array.isArray(job.registryDependencies)) {
-            sharedData.registryDependencies.push(...job.registryDependencies);
-        } else {
-            throw new Error(
-                `Invalid registryDependencies type: ${typeof job.registryDependencies}`,
-            );
-        }
-        //
     } else if (job.type === "dependencies") {
         if (typeof job.dependencies === "string") {
             job.dependencies = [job.dependencies];

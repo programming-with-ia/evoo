@@ -4,7 +4,6 @@ import { getDeepValue } from "./utils";
 
 export const sharedData: {
     nodeDependencies: NonNullable<JsonStructure["dependencies"]>;
-    registryDependencies: NonNullable<JsonStructure["dependencies"]>;
     cliOptions: CliOptions;
     // Done for simple jobs like dependencies done, file done
     jobResults: Record<string, string>;
@@ -20,7 +19,6 @@ export const sharedData: {
     ) => Promise<void>)[];
 } = {
     nodeDependencies: [],
-    registryDependencies: [],
     cliOptions: {},
     jobResults: {},
     storedData: {},

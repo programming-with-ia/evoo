@@ -85,7 +85,6 @@ type ForJob<
         | "question"
         | "group"
         | "file"
-        | "registryDependencies"
         | "dependencies"
         | "run"
         | "log",
@@ -149,14 +148,6 @@ type Job<T extends Record<string, unknown> = never> =
     | SetRequired<ForJob<Questions, "question">, "id">
     /** A container for a nested sequence of jobs. */
     | ForJob<JobsGroup<T>, "group">
-    /** Installs dependencies from a UI component registry (e.g., shadcn/ui). A `when` condition is required. */
-    | SetRequired<
-          ForJob<
-              { registryDependencies: string[] | string },
-              "registryDependencies"
-          >,
-          "when"
-      >
     /** Installs npm packages. A `when` condition is required. */
     | SetRequired<
           ForJob<{ dependencies: string[] | string }, "dependencies">,
@@ -202,8 +193,6 @@ type JsonStructure<
     version?: string;
     /** A brief summary of what the scaffold does. */
     description?: string;
-    /** A list of UI registry dependencies (e.g., from shadcn/ui) to be installed. */
-    registryDependencies?: string[];
     /**
      * A list of npm packages to be installed.
      */

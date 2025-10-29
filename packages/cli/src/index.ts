@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import {
-    addShadcnComponents,
     type CliOptions,
     config,
     globals as G,
@@ -61,7 +60,6 @@ program
 
             //! this feature is not fully tested for all package managers tested
             await installDependencies(sharedData.nodeDependencies);
-            await addShadcnComponents(sharedData.registryDependencies);
 
             for (const cb of sharedData.onDoneCallbacks) {
                 await cb(sharedContext);
