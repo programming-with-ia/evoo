@@ -163,30 +163,6 @@ Installs npm packages.
 }
 ```
 
-### **`registryDependencies`**
-
-Installs components from a component registry (e.g., shadcn/ui). **Note:** This job is provided by the `shadcn` plugin.
-
-| Property | Type | Required | Description |
-| --- | --- | :---: | --- |
-| `registryDependencies` | `string[]` or `string` | ✔️ | The component(s) to install. |
-| `when` | `string` | | A conditional expression to control installation. |
-
-**Example:**
-
-```json
-{
-  "plugins": ["shadcn"],
-  "jobs": [
-    {
-      "type": "registryDependencies",
-      "when": "#use-dialog == true",
-      "registryDependencies": ["dialog", "button"]
-    }
-  ]
-}
-```
-
 ### **`group`**
 
 A container for a nested sequence of jobs.
