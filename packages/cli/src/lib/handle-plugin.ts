@@ -1,65 +1,67 @@
-import path from "path";
+import { createRequire } from "node:module";
+import { installDependencies } from "@evoo/core";
 import fs from "fs-extra";
 import os from "os";
-import { installDependencies } from "@evoo/core";
-import { createRequire } from "node:module";
+import path from "path";
 import { findProjectRoot } from "./find-project-root";
 
 const globalPluginDir = path.join(os.homedir(), ".evoo", "plugins");
 
 interface PluginStrategy {
-  isGlobal: boolean;
-  pluginDir: string;
+    isGlobal: boolean;
+    pluginDir: string;
 }
-let cachedStrategy: PluginStrategy | undefined = undefined;
+let cachedStrategy: PluginStrategy | undefined;
 
 async function ensureGlobalPluginDir() {
-  fs.ensureDirSync(globalPluginDir);
+    fs.ensureDirSync(globalPluginDir);
 
-  const packageJsonPath = path.join(globalPluginDir, "package.json");
-  if (!fs.existsSync(packageJsonPath)) {
-    fs.writeJsonSync(packageJsonPath, {
-      name: "evoo-global-plugins",
-      version: "1.0.0",
-      private: true,
-    });
-  }
+    const packageJsonPath = path.join(globalPluginDir, "package.json");
+    if (!fs.existsSync(packageJsonPath)) {
+        fs.writeJsonSync(packageJsonPath, {
+            name: "evoo-global-plugins",
+            version: "1.0.0",
+            private: true,
+        });
+    }
 }
 
 export async function getPluginStrategy(): Promise<PluginStrategy> {
-  if (cachedStrategy) {
-    return cachedStrategy;
-  }
+    if (cachedStrategy) {
+        return cachedStrategy;
+    }
 
-  const projectRoot = await findProjectRoot(process.cwd());
+    const projectRoot = await findProjectRoot(process.cwd());
 
-  if (projectRoot) {
+    if (projectRoot) {
+        cachedStrategy = {
+            isGlobal: false,
+            pluginDir: projectRoot,
+        };
+        return cachedStrategy;
+    }
+
+    await ensureGlobalPluginDir();
     cachedStrategy = {
-      isGlobal: false,
-      pluginDir: projectRoot,
+        isGlobal: true,
+        pluginDir: globalPluginDir,
     };
     return cachedStrategy;
-  }
-
-  await ensureGlobalPluginDir();
-  cachedStrategy = {
-    isGlobal: true,
-    pluginDir: globalPluginDir,
-  };
-  return cachedStrategy;
 }
 
 export async function installPlugin(pluginName: string) {
-  const { isGlobal, pluginDir } = await getPluginStrategy();
-  await installDependencies([pluginName], !isGlobal, pluginDir, isGlobal);
+    const { isGlobal, pluginDir } = await getPluginStrategy();
+    await installDependencies([pluginName], !isGlobal, pluginDir, isGlobal);
 }
 
-export async function resolvePlugin(pluginName: string): Promise<string | null> {
+export async function resolvePlugin(
+    pluginName: string,
+): Promise<string | null> {
     const { pluginDir } = await getPluginStrategy();
     const require = createRequire(path.join(pluginDir, "index.js")); // Hack to get a base path for require
     try {
         return require.resolve(pluginName);
-    } catch (e) {
+    } catch (_e) {
         return null;
     }
 }

@@ -1,11 +1,12 @@
-import { execa, type StdinOption } from "execa";
+import { execa } from "execa";
 import fs from "fs-extra";
 import path from "path";
-import { logger } from "./logger";
-import { type PackageManager, getUserPkgManager } from "./getUserPkgManager";
+import type { JsonStructure } from "../types";
+import { execWithSpinner } from "./exec";
+import { getUserPkgManager } from "./getUserPkgManager";
 import { globals as G } from "./globals";
+import { logger } from "./logger";
 import { prompts } from "./prompts";
-import { JsonStructure } from "../types";
 
 // https://github.com/shadcn-ui/ui/blob/c9311f26fab488330e5ab349a347a1119d133be5/packages/shadcn/src/mcp/utils.ts#L9
 // https://github.com/shadcn-ui/ui/blob/c9311f26fab488330e5ab349a347a1119d133be5/packages/shadcn/src/mcp/utils.ts#L48
@@ -24,7 +25,7 @@ export const installDependencies = async (
     if (packages.length === 0) {
         return;
     }
-    
+
     logger.warn("This feature is not fully tested for all package managers.");
 
     const pkgManager = isGlobal ? "npm" : getUserPkgManager();
@@ -78,151 +79,53 @@ export const installDependencies = async (
             return;
         }
 
-        const devFlag = dev ? ["-D"] : [];
+        const devFlag = dev ? "-D" : "";
         const execOptions = { cwd, stderr: "inherit" } as const;
+        const packagesString = filteredPackages.join(" ");
 
         switch (pkgManager) {
             case "npm":
-                await execa(pkgManager, ["install", ...filteredPackages, ...devFlag], execOptions);
+                await execa(
+                    "npm",
+                    ["install", ...filteredPackages, devFlag],
+                    execOptions,
+                );
                 return null;
 
             case "pnpm":
-                return execWithSpinner(pkgManager, {
-                    args: ["add", ...filteredPackages, ...devFlag],
-                    cwd,
-                    onDataHandle: () => (data) => {
-                        const text = data.toString();
-                        if (text.includes("Progress")) {
-                            logger.log(
-                                text.includes("|")
-                                    ? (text.split(" | ")[1] ?? "")
-                                    : text,
-                            );
-                        }
+                return execWithSpinner(
+                    `pnpm add ${packagesString} ${devFlag}`,
+                    {
+                        cwd,
+                        onDataHandle: () => (data) => {
+                            const text = data.toString();
+                            if (text.includes("Progress")) {
+                                logger.log(
+                                    text.includes("|")
+                                        ? (text.split(" | ")[1] ?? "")
+                                        : text,
+                                );
+                            }
+                        },
                     },
-                });
+                );
 
             case "yarn":
-                return execWithSpinner(pkgManager, {
-                    args: ["add", ...filteredPackages, ...devFlag],
-                    cwd,
-                    onDataHandle: () => (data) => {
-                        logger.log(data.toString());
+                return execWithSpinner(
+                    `yarn add ${packagesString} ${devFlag}`,
+                    {
+                        cwd,
+                        onDataHandle: () => (data) => {
+                            logger.log(data.toString());
+                        },
                     },
-                });
+                );
 
             case "bun":
-                return execWithSpinner(pkgManager, {
-                    args: ["add", ...filteredPackages, ...devFlag],
+                return execWithSpinner(`bun add ${packagesString} ${devFlag}`, {
                     cwd,
                     stdout: "ignore",
                 });
         }
     }
-};
-
-/**
- * Executes command with Ora spinner.
- */
-const execWithSpinner = async (
-    pkgManager: string,
-    options: {
-        startMessage?: string;
-        successMessage?: string;
-        args?: string[];
-        cwd?: string;
-        stdout?: "pipe" | "ignore" | "inherit";
-        onDataHandle?: () => (data: Buffer) => void;
-    },
-) => {
-    const {
-        onDataHandle,
-        args,
-        cwd = process.cwd(),
-        stdout = "pipe",
-        startMessage,
-        successMessage,
-    } = options;
-
-    G.spinner.text = startMessage ?? `Running ${pkgManager} install <deps>...`;
-    logger.info(G.spinner.text);
-
-    const subprocess = execa(pkgManager, args, { cwd, stdout });
-
-    await new Promise<void>((res, rej) => {
-        if (onDataHandle) {
-            subprocess.stdout?.on("data", onDataHandle());
-        }
-
-        subprocess.on("error", (e) => {
-            logger.error(e.message);
-            G.spinner.fail(`Error: ${e.message}`);
-            rej(e);
-        });
-
-        subprocess.on("close", () => {
-            logger.success(
-                successMessage ?? `✅ complete dependencies installation`,
-            );
-            res();
-        });
-    });
-};
-
-/**
- * Adds one or more shadcn-ui components, showing a spinner during execution.
- *
- * @param {string[]} components - An array of component names to add.
- */
-export const addShadcnComponents = async (components: string[]) => {
-    if (components.length === 0) {
-        return;
-    }
-
-    // 1. Validation checks
-    if (!fs.pathExistsSync("components.json")) {
-        G.spinner.fail(
-            "Error: 'components.json' not found.\n" +
-                "Please run 'npx shadcn-ui@latest init' to initialize your project first.",
-        );
-        return;
-    }
-
-    logger.warn(
-        `Installing potentially untested shadcn components. Please verify their functionality after installation.`,
-    );
-
-    // 2. Determine the correct command and arguments
-    const pkgManager = getUserPkgManager();
-    let command: string;
-    let args: string[];
-
-    const componentArgs = ["add", ...components];
-
-    switch (pkgManager) {
-        case "pnpm":
-            command = "pnpm";
-            args = ["dlx", "shadcn@latest", ...componentArgs];
-            break;
-        case "yarn":
-            command = "yarn";
-            args = ["dlx", "shadcn@latest", ...componentArgs];
-            break;
-        case "bun":
-            command = "bunx";
-            args = ["--bun", "shadcn@latest", ...componentArgs];
-            break;
-        case "npm":
-        default:
-            command = "npx";
-            args = ["shadcn@latest", ...componentArgs];
-            break;
-    }
-
-    await execWithSpinner(command, {
-        args,
-        stdout: "inherit",
-        startMessage: `Adding shadcn components: ${components.join(", ")}`,
-        successMessage: `Successfully added component(s)!`,
-    });
 };

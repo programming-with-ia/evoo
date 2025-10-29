@@ -1,5 +1,5 @@
 {
-    "name": "@evoo/plugin-placeholder",
+    "name": "@evoo/plugin-goodbye",
     "version": "0.0.0",
     "private": true,
     "main": "./dist/index.js",

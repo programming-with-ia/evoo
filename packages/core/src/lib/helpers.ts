@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: This is a generic helper */
 import { globals as G } from "./globals";
 
 /**
@@ -14,32 +15,32 @@ import { globals as G } from "./globals";
  * @returns {T} A new function with the same signature as the input function.
  */
 export function withSpinner<T extends (...args: any[]) => any>(fn: T): T {
-  return ((...args: Parameters<T>): ReturnType<T> => {
-    const spinning = G.spinner.isSpinning;
-    const t = G.spinner.text;
+    return ((...args: Parameters<T>): ReturnType<T> => {
+        const spinning = G.spinner.isSpinning;
+        const t = G.spinner.text;
 
-    if (spinning) {
-      G.spinner.stop();
-    }
+        if (spinning) {
+            G.spinner.stop();
+        }
 
-    let result;
-    try {
-      result = fn(...args);
-      if (result instanceof Promise) {
-        return result.finally(() => {
-          if (spinning) {
-            G.spinner.start(t);
-          }
-        }) as ReturnType<T>;
-      }
-      return result;
-    } finally {
-      if (!(result instanceof Promise) && spinning) {
-        G.spinner.start(t);
-      }
-    }
-  }) as T;
+        let result: unknown;
+        try {
+            result = fn(...args);
+            if (result instanceof Promise) {
+                return result.finally(() => {
+                    if (spinning) {
+                        G.spinner.start(t);
+                    }
+                }) as ReturnType<T>;
+            }
+            return result as ReturnType<T>;
+        } finally {
+            if (!(result instanceof Promise) && spinning) {
+                G.spinner.start(t);
+            }
+        }
+    }) as T;
 }
 
 export const isValidUrl = (str: string) =>
-  /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(str);
+    /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(str);

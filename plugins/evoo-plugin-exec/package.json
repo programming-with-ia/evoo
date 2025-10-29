@@ -1,5 +1,5 @@
 {
-    "name": "@evoo/plugin-placeholder",
+    "name": "@evoo/plugin-exec",
     "version": "0.0.0",
     "private": true,
     "main": "./dist/index.js",
@@ -15,6 +15,7 @@
         "@evoo/core": "workspace:*"
     },
     "devDependencies": {
+        "@types/node": "^20.11.24",
         "tsup": "^8.0.1",
         "typescript": "^5.3.3"
     }

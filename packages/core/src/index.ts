@@ -1,3 +1,4 @@
+export * from "./lib/exec";
 export * from "./lib/fetch";
 export * from "./lib/getUserPkgManager";
 export * from "./lib/globals";
@@ -10,5 +11,5 @@ export * from "./lib/prompts";
 export * from "./lib/setting";
 export * from "./lib/shared";
 export * from "./lib/utils";
-export * from "./types";
 export * from "./plugin-types";
+export * from "./types";

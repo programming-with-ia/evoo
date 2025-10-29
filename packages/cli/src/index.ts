@@ -1,21 +1,19 @@
 #!/usr/bin/env node
-import ora from "ora";
-import chalk from "chalk";
-import fs from "fs-extra";
-import path from "path";
-import { Command } from "commander";
 import {
-    logger,
-    Consts,
-    globals as G,
-    addShadcnComponents,
-    installDependencies,
+    type CliOptions,
     config,
+    globals as G,
+    installDependencies,
+    type JsonStructure,
+    logger,
+    type Settings,
     sharedData,
-    CliOptions,
-    JsonStructure,
-    Settings,
 } from "@evoo/core";
+import chalk from "chalk";
+import { Command } from "commander";
+import fs from "fs-extra";
+import ora from "ora";
+import path from "path";
 import { processJson } from "./processJson";
 
 const storeFile = ".evoo.json";
@@ -47,7 +45,11 @@ program
                 );
             }
 
-            await processJson(jsonPath);
+            const sharedContext = await processJson(jsonPath);
+
+            for (const cb of sharedData.onCompleteCallbacks) {
+                await cb(sharedContext);
+            }
 
             if (Object.keys(sharedData.storedData).length > 0) {
                 fs.writeJsonSync(
@@ -58,7 +60,10 @@ program
 
             //! this feature is not fully tested for all package managers tested
             await installDependencies(sharedData.nodeDependencies);
-            await addShadcnComponents(sharedData.registryDependencies);
+
+            for (const cb of sharedData.onDoneCallbacks) {
+                await cb(sharedContext);
+            }
 
             G.spinner.succeed("Files added successfully!");
         } catch (error) {

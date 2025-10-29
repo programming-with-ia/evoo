@@ -4,17 +4,27 @@ import { getDeepValue } from "./utils";
 
 export const sharedData: {
     nodeDependencies: NonNullable<JsonStructure["dependencies"]>;
-    registryDependencies: NonNullable<JsonStructure["dependencies"]>;
     cliOptions: CliOptions;
     // Done for simple jobs like dependencies done, file done
     jobResults: Record<string, string>;
     storedData: Record<string, string>;
+    onStartCallbacks: ((
+        sharedContext: Record<string, unknown> | undefined,
+    ) => Promise<void>)[];
+    onCompleteCallbacks: ((
+        sharedContext: Record<string, unknown> | undefined,
+    ) => Promise<void>)[];
+    onDoneCallbacks: ((
+        sharedContext: Record<string, unknown> | undefined,
+    ) => Promise<void>)[];
 } = {
     nodeDependencies: [],
-    registryDependencies: [],
     cliOptions: {},
     jobResults: {},
     storedData: {},
+    onStartCallbacks: [],
+    onCompleteCallbacks: [],
+    onDoneCallbacks: [],
 };
 
 export function getValueFromSource(

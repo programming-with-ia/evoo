@@ -1,5 +1,5 @@
 // --- Type Definitions ---
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: This is a generic evaluator */
 
 import { getDeepValue } from "@evoo/core";
 
@@ -121,7 +121,7 @@ export function evaluateWhen(expression: string, context: Context): boolean {
         { type: "CALLBACK", re: /^([A-Za-z_]\w*)\s*\(/ },
         {
             type: "VALUE",
-            re: /^(@[\.A-Za-z_][\w.-]*|#[\.A-Za-z_][\w.-]*|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|true|false|\d+(?:\.\d+)?)/,
+            re: /^(@[.A-Za-z_][\w.-]*|#[.A-Za-z_][\w.-]*|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|true|false|\d+(?:\.\d+)?)/,
         },
     ];
 

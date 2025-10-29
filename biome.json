@@ -6,7 +6,8 @@
         "useIgnoreFile": false
     },
     "files": {
-        "ignoreUnknown": false
+        "ignoreUnknown": false,
+        "includes": ["**/*.json", "**/*.ts", "**/*.tsx"]
     },
     "formatter": {
         "enabled": true,
@@ -17,7 +18,10 @@
         "enabled": true,
         "rules": {
             "recommended": true,
-            "security": "warn"
+            "security": "warn",
+            "suspicious": {
+                "noExtraNonNullAssertion": "off"
+            }
         }
     },
     "javascript": {

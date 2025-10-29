@@ -1,5 +1,5 @@
-import { defineConfig } from "tsup";
 import fs from "fs-extra";
+import { defineConfig } from "tsup";
 
 const isDev = process.env.npm_lifecycle_event === "dev";
 
@@ -14,7 +14,7 @@ export default defineConfig({
     plugins: [
         {
             name: "dts-copy-plugin",
-            buildEnd(ctx) {
+            buildEnd() {
                 fs.copyFileSync("src/types.ts", "dist/index.d.ts");
             },
         },

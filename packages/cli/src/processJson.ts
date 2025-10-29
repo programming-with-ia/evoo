@@ -1,25 +1,27 @@
+import {
+    Consts,
+    Fetch,
+    type FileType,
+    globals as G,
+    getValueFromSource,
+    handleFilePath,
+    isValidUrl,
+    type Job,
+    type JsonStructure,
+    logger,
+    parseVar,
+    prompts,
+    setDeepValue,
+    sharedData,
+} from "@evoo/core";
 import fs from "fs-extra";
 import path from "path";
-import {
-    logger,
-    Consts,
-    globals as G,
-    isValidUrl,
-    handleFilePath,
-    Fetch,
-    getValueFromSource,
-    sharedData,
-    FileType,
-    Job,
-    JsonStructure,
-    prompts,
-    parseVar,
-    setDeepValue,
-} from "@evoo/core";
 import { evaluateWhen } from "./lib/evaluateWhen";
-import { loadPlugin, getJobExecutor } from "./lib/pluginManager";
+import { getJobExecutor, loadPlugin } from "./lib/pluginManager";
 
-export async function processJson(jsonPath: string): Promise<void> {
+export async function processJson(
+    jsonPath: string,
+): Promise<Record<string, unknown> | undefined> {
     //
     // handle json local or remote file
     G.spinner.text = `Processing Json Data: ${jsonPath}`;
@@ -40,6 +42,11 @@ export async function processJson(jsonPath: string): Promise<void> {
         }
     }
 
+    for (const cb of sharedData.onStartCallbacks) {
+        await cb(jsonData.sharedContext);
+    }
+    sharedData.onStartCallbacks = [];
+
     const basePath = (
         cliOptions.extendPath
             ? await handleFilePath({
@@ -53,6 +60,7 @@ export async function processJson(jsonPath: string): Promise<void> {
         jobs: jsonData.jobs,
         basePath,
         definitions: jsonData.definitions,
+        sharedContext: jsonData.sharedContext,
     });
 
     //* handling dependencies
@@ -70,26 +78,27 @@ export async function processJson(jsonPath: string): Promise<void> {
             }
         }
     }
-    if (jsonData.registryDependencies) {
-        sharedData.registryDependencies.push(...jsonData.registryDependencies);
-    }
+
+    return jsonData.sharedContext;
 }
 
 async function processJobs({
     jobs,
     basePath,
     definitions,
+    sharedContext,
 }: {
     jobs?: Job[];
     basePath: string;
     definitions?: JsonStructure["definitions"];
+    sharedContext?: Record<string, unknown>;
 }) {
     if (!jobs) {
         return;
     }
 
     for (const job of jobs) {
-        await processJob({ job, basePath, definitions });
+        await processJob({ job, basePath, definitions, sharedContext });
     }
 }
 
@@ -97,10 +106,12 @@ async function processJob({
     job,
     basePath,
     definitions,
+    sharedContext,
 }: {
     job: Job;
     basePath: string;
     definitions?: JsonStructure["definitions"];
+    sharedContext?: Record<string, unknown>;
 }) {
     const { when, id, confirm } = job;
 
@@ -171,7 +182,7 @@ async function processJob({
                 message: question,
                 defaultValue: defaultValue,
                 placeholder: defaultValue
-                    ? "default: " + defaultValue
+                    ? `default: ${defaultValue}`
                     : undefined,
             });
         } else if (questionType === "confirm") {
@@ -209,19 +220,11 @@ async function processJob({
                 ignoreExist: true,
             })) as string;
         }
-        await processJobs({ jobs: job.jobs, basePath: _basePath });
-    } else if (job.type === "registryDependencies") {
-        if (typeof job.registryDependencies === "string") {
-            job.registryDependencies = [job.registryDependencies];
-        }
-        if (Array.isArray(job.registryDependencies)) {
-            sharedData.registryDependencies.push(...job.registryDependencies);
-        } else {
-            throw new Error(
-                `Invalid registryDependencies type: ${typeof job.registryDependencies}`,
-            );
-        }
-        //
+        await processJobs({
+            jobs: job.jobs,
+            basePath: _basePath,
+            sharedContext,
+        });
     } else if (job.type === "dependencies") {
         if (typeof job.dependencies === "string") {
             job.dependencies = [job.dependencies];
@@ -236,9 +239,11 @@ async function processJob({
     } else if (job.type === "run") {
         if (Object.keys(definitions ?? {}).includes(job.target)) {
             await processJob({
+                // biome-ignore lint/style/noNonNullAssertion: This is a valid use case
                 job: definitions![job.target] as Job,
                 basePath,
                 definitions,
+                sharedContext,
             });
         } else {
             logger.warn(`Job not found: ${job.target}`);
@@ -248,7 +253,7 @@ async function processJob({
     } else {
         const jobExecutor = getJobExecutor(job.type);
         if (jobExecutor) {
-            await jobExecutor(job);
+            await jobExecutor(job, sharedContext);
         } else {
             throw new Error(`Invalid job type '${job.type}'`);
         }
