@@ -1,8 +1,8 @@
 # @evoo/cli 🏗️
 
-Welcome to the Evoo CLI, a powerful, job-based tool for automating project scaffolding. Define a series of tasks in a single JSON file—creating files, asking questions, installing dependencies, and more. Evoo executes them sequentially with support for **conditional logic**, **user prompts**, and **persistent state** to create highly adaptable templates.
+Welcome to the Evoo CLI, a powerful, job-based tool for automating project tasks. It can be used for both **one-off scaffolding** (like initializing a new project with `create-react-app.json`) and **stateful, incremental updates** (like adding a themed component with `add-fluent-ui-button.json`).
 
-It works seamlessly with both local and remote JSON configurations, and its plugin-first architecture makes it perfect for personal boilerplates and enforcing team-wide standards.
+Define a series of tasks in a single JSON file—creating files, asking questions, installing dependencies, and more. Evoo executes them sequentially with support for **conditional logic**, **user prompts**, and **persistent state** (`evoo.store.json`) to create highly adaptable and context-aware automations.
 
 ## ✨ Core Features
 
