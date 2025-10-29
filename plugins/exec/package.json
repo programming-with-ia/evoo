@@ -1,8 +1,7 @@
 {
     "name": "@evoo/plugin-exec",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./dist/index.js",
+    "version": "0.0.1",
+    "main": "./dist/1index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
     "scripts": {
@@ -11,12 +10,10 @@
         "lint": "biome lint .",
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {
-        "@evoo/core": "workspace:*"
+    "peerDependencies": {
+        "@evoo/core": "changed-by-script"
     },
     "devDependencies": {
-        "@types/node": "^20.11.24",
-        "tsup": "^8.0.1",
-        "typescript": "^5.3.3"
+        "@evoo/core": "workspace:*"
     }
 }
