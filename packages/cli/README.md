@@ -1,17 +1,17 @@
 # @evoo/cli 🏗️
 
-Welcome to the Evoo CLI, a powerful, job-based tool for automating project tasks. It can be used for both **one-off scaffolding** (like initializing a new project with `create-react-app.json`) and **stateful, incremental updates** (like adding a themed component with `add-fluent-ui-button.json`).
+Welcome to the Evoo CLI, a powerful, job-based tool for automating project tasks. It can be used for both **one-off scaffolding** (like initializing a new project with `create-react-app.json`) and **stateful, incremental updates** (like adding a themed component with `add-material-ui-button.json`).
 
 Define a series of tasks in a single JSON file—creating files, asking questions, installing dependencies, and more. Evoo executes them sequentially with support for **conditional logic**, **user prompts**, and **persistent state** (`evoo.store.json`) to create highly adaptable and context-aware automations.
 
 ## ✨ Core Features
 
--   **Job-Based System**: Every action is a "job"—create a file, ask a question, install a package, or group other jobs.
--   **Conditional Logic**: Use powerful `when` clauses to run jobs only when specific conditions are met.
--   **Interactive Prompts**: Engage with the user through text inputs, confirmations (`y/n`), or a list of options.
--   **State Management**: Save user answers in-memory for the current session (`#id`) or persistently across runs (`@id`).
--   **Dynamic Paths & Content**: Use stored answers as variables in file paths, file content, and conditional checks.
--   **Plugin-Driven**: The CLI's functionality is extended through plugins, making it highly modular and adaptable.
+- **Job-Based System**: Every action is a "job"—create a file, ask a question, install a package, or group other jobs.
+- **Conditional Logic**: Use powerful `when` clauses to run jobs only when specific conditions are met.
+- **Interactive Prompts**: Engage with the user through text inputs, confirmations (`y/n`), or a list of options.
+- **State Management**: Save user answers in-memory for the current session (`#id`) or persistently across runs (`@id`).
+- **Dynamic Paths & Content**: Use stored answers as variables in file paths, file content, and conditional checks.
+- **Plugin-Driven**: The CLI's functionality is extended through plugins, making it highly modular and adaptable.
 
 ## 💻 Installation
 
@@ -35,7 +35,7 @@ npx evoo@latest <jsonPath>
 evoo <source> [options]
 ```
 
--   `<source>`: The path to a local `.json` file or a URL to a remote one.
+- `<source>`: The path to a local `.json` file or a URL to a remote one.
 
 ### **CLI Options**
 
@@ -220,28 +220,28 @@ Executes a reusable job from the top-level `definitions` map.
 
 A `when` expression determines if a job should run. It can access any stored variable, including **nested values** using dot notation (e.g., `#project.linter`).
 
-1.  **Existence Check**: Checks if a job has run (i.e., its result is `defined`), **not** whether the value is "truthy".
+1. **Existence Check**: Checks if a job has run (i.e., its result is `defined`), **not** whether the value is "truthy".
 
-    -   `"#useAuth"`: Runs if the `useAuth` job was executed.
-    -   `"!#useAuth"`: Runs if the `useAuth` job was **skipped**.
+    - `"#useAuth"`: Runs if the `useAuth` job was executed.
+    - `"!#useAuth"`: Runs if the `useAuth` job was **skipped**.
 
-2.  **Value Comparison**: Compares a job's result to a specific value.
+2. **Value Comparison**: Compares a job's result to a specific value.
 
-    -   **Note**: Use loose equality operators (`==`, `!=`) in the JSON. Evoo's engine will execute them as **strict** (`===`, `!==`) comparisons at runtime.
-    -   `"#framework == 'react'"`: Runs if the `framework` result is strictly `'react'`.
-    -   `"@project.linter == true"`: Runs if the nested `linter` value is the boolean `true`.
+    - **Note**: Use loose equality operators (`==`, `!=`) in the JSON. Evoo's engine will execute them as **strict** (`===`, `!==`) comparisons at runtime.
+    - `"#framework == 'react'"`: Runs if the `framework` result is strictly `'react'`.
+    - `"@project.linter == true"`: Runs if the nested `linter` value is the boolean `true`.
 
 ### **Dynamic File Paths**
 
 The `name` property of a `file` job is highly dynamic. You can construct paths using a combination of:
 
--   **Variables**: Inject answers from questions.
-    -   `"name": "src/components/<#componentName>/index.tsx"`
--   **Ask Placeholders**: Prompt the user directly for a path segment.
-    -   `<-ask->`: Prompts the user (e.g., `src/<-ask->/index.js`).
-    -   `<-ask|defaultName->`: Prompts with a default value.
--   **Directory Shortcuts**: Use special keywords that resolve to common paths.
-    -   `%SRC%`, `%COMPONENTS%` (e.g., `src`, `src/components`).
+- **Variables**: Inject answers from questions.
+  - `"name": "src/components/<#componentName>/index.tsx"`
+- **Ask Placeholders**: Prompt the user directly for a path segment.
+  - `<-ask->`: Prompts the user (e.g., `src/<-ask->/index.js`).
+  - `<-ask|defaultName->`: Prompts with a default value.
+- **Directory Shortcuts**: Use special keywords that resolve to common paths.
+  - `%SRC%`, `%COMPONENTS%` (e.g., `src`, `src/components`).
 
 ## 💡 Examples
 
