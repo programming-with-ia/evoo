@@ -2,6 +2,13 @@
     "name": "@evoo/cli",
     "version": "1.0.0-alpha.1",
     "bin": "./dist/index.js",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md"
+    ],
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
