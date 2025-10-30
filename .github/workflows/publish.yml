@@ -10,26 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node.js and Authenticate
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'pnpm'
+          # This line tells the action to set up for the public npm registry
+          registry-url: 'https://registry.npmjs.org'
+        env:
+          # This is the token the setup-node action uses to create .npmrc
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm build
+        run: pnpm run build
 
       - name: Publish packages
+        # No need for the env block here anymore
         run: node scripts/publish.mjs
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
