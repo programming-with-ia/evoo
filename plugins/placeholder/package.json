@@ -2,9 +2,28 @@
     "name": "@evoo/plugin-placeholder",
     "version": "0.0.0",
     "private": true,
+    "author": "immi",
+    "license": "MIT",
+    "homepage": "https://github.com/programming-with-ia/evoo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/programming-with-ia/evoo.git"
+    },
+    "bugs": {
+        "url": "https://github.com/programming-with-ia/evoo/issues"
+    },
+    "keywords": [
+        "evoo",
+        "plugin",
+        "template",
+        "placeholder",
+        "scaffolding",
+        "example"
+    ],
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
+    "sideEffects": false,
     "files": [
         "dist",
         "README.md"

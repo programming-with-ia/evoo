@@ -2,7 +2,30 @@
     "name": "evoo-monorepo",
     "version": "1.0.0-alpha.6",
     "private": true,
-    "description": "",
+    "description": "A powerful, job-based tool for automating project tasks, from one-off scaffolding to stateful, incremental updates.",
+    "author": "immi",
+    "license": "MIT",
+    "homepage": "https://github.com/programming-with-ia/evoo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/programming-with-ia/evoo.git"
+    },
+    "bugs": {
+        "url": "https://github.com/programming-with-ia/evoo/issues"
+    },
+    "keywords": [
+        "evoo",
+        "cli",
+        "scaffolding",
+        "automation",
+        "codemod",
+        "generator",
+        "schematics",
+        "project-generator",
+        "typescript",
+        "plugin",
+        "json"
+    ],
     "main": "index.js",
     "scripts": {
         "typecheck": "turbo typecheck",
@@ -14,9 +37,6 @@
         "format-and-lint": "biome check .",
         "format-and-lint:fix": "biome check . --write"
     },
-    "keywords": [],
-    "author": "",
-    "license": "MIT",
     "packageManager": "pnpm@10.18.2",
     "devDependencies": {
         "@biomejs/biome": "^2.2.6",
