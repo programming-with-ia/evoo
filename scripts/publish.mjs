@@ -116,7 +116,64 @@ async function publishCliAlias(cliPkg) {
     }
 }
 
+async function synchronizeVersions() {
+    console.log('Synchronizing package versions...');
+
+    const corePackageJsonPath = join(rootDir, 'packages', 'core', 'package.json');
+    const corePackageJsonContent = await readFile(corePackageJsonPath, 'utf-8');
+    const corePackageJson = JSON.parse(corePackageJsonContent);
+    const coreVersion = corePackageJson.version;
+    console.log(`Source version from @evoo/core is ${coreVersion}`);
+
+    const packages = await getPackages('packages');
+    const plugins = await getPackages('plugins');
+    const allPackages = [...packages, ...plugins];
+
+    for (const pkg of allPackages) {
+        const packageJsonPath = join(pkg.path, 'package.json');
+        const packageJsonContent = await readFile(packageJsonPath, 'utf-8');
+        const packageJson = JSON.parse(packageJsonContent);
+
+        let changed = false;
+
+        if (packageJson.name === '@evoo/cli') {
+            if (packageJson.version !== coreVersion) {
+                console.log(`Updating @evoo/cli version from ${packageJson.version} to ${coreVersion}`);
+                packageJson.version = coreVersion;
+                changed = true;
+            }
+        }
+
+        const isCli = packageJson.name === '@evoo/cli';
+        const newCoreDepVersion = isCli ? coreVersion : `^${coreVersion}`;
+
+        if (packageJson.dependencies && packageJson.dependencies['@evoo/core']) {
+            if (packageJson.dependencies['@evoo/core'] !== newCoreDepVersion) {
+                console.log(`Updating @evoo/core dependency in ${packageJson.name}`);
+                packageJson.dependencies['@evoo/core'] = newCoreDepVersion;
+                changed = true;
+            }
+        }
+
+        if (packageJson.peerDependencies && packageJson.peerDependencies['@evoo/core']) {
+            if (packageJson.peerDependencies['@evoo/core'] !== newCoreDepVersion) {
+                console.log(`Updating @evoo/core peerDependency in ${packageJson.name}`);
+                packageJson.peerDependencies['@evoo/core'] = newCoreDepVersion;
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+            console.log(`- Wrote changes to ${packageJsonPath}`);
+        }
+    }
+    console.log('Version synchronization complete.');
+}
+
 async function main() {
+    await synchronizeVersions();
+
     const packages = await getPackages('packages');
     const plugins = await getPackages('plugins');
 
