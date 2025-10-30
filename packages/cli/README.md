@@ -1,8 +1,17 @@
-# @evoo/cli 🏗️
-
-Welcome to the Evoo CLI, a powerful, job-based tool for automating project tasks. It can be used for both **one-off scaffolding** (like initializing a new project with `create-react-app.json`) and **stateful, incremental updates** (like adding a themed component with `add-material-ui-button.json`).
-
-Define a series of tasks in a single JSON file—creating files, asking questions, installing dependencies, and more. Evoo executes them sequentially with support for **conditional logic**, **user prompts**, and **persistent state** (`evoo.store.json`) to create highly adaptable and context-aware automations.
+<p align="center">
+  <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/asset/evoo-light.svg">
+  <img src="/asset/evoo-dark.svg" width="200" alt="Logo for Evoo">
+</picture>
+</p>
+  <h2 align="center">Evoo CLI: Powerful Project Automation</h2>
+<p align="center">
+  Evoo CLI, a <strong>powerful, job-based tool</strong> for automating project tasks. It can be used for both <strong>one-off scaffolding</strong> (like initializing a new project with <code>create-react-app.json</code>) and <strong>stateful, incremental updates</strong> (like adding a themed component with <code>add-material-ui-button.json</code>).
+</p>
+<p align="center">
+  Define a series of tasks in a single <strong>JSON file</strong>—creating files, asking questions, installing dependencies, and more. Evoo executes them sequentially with support for <strong>conditional logic</strong>, <strong>user prompts</strong>, and <strong>persistent state</strong> (<code>evoo.store.json</code>) to create <strong>highly adaptable</strong> and <strong>context-aware automations</strong>.
+</p>
+<hr />
 
 ## ✨ Core Features
 
