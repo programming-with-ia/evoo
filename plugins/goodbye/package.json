@@ -2,9 +2,29 @@
     "name": "@evoo/plugin-goodbye",
     "version": "0.0.0",
     "private": true,
+    "author": "immi",
+    "license": "MIT",
+    "homepage": "https://github.com/programming-with-ia/evoo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/programming-with-ia/evoo.git"
+    },
+    "bugs": {
+        "url": "https://github.com/programming-with-ia/evoo/issues"
+    },
+    "keywords": [
+        "evoo",
+        "plugin",
+        "goodbye",
+        "example",
+        "template",
+        "scaffolding",
+        "learning"
+    ],
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
+    "sideEffects": false,
     "files": [
         "dist",
         "README.md"
