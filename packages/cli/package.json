@@ -1,7 +1,6 @@
 {
     "name": "@evoo/cli",
-    "version": "0.0.0",
-    "private": true,
+    "version": "1.0.0-alpha.1",
     "bin": "./dist/index.js",
     "scripts": {
         "build": "tsup",
@@ -11,12 +10,10 @@
     },
     "dependencies": {
         "@evoo/core": "workspace:*",
-        "chalk": "^5.6.2",
-        "commander": "^11.1.0",
-        "fs-extra": "^11.2.0",
-        "ora": "^8.2.0"
+        "commander": "^11.1.0"
     },
     "devDependencies": {
+        "@evoo/core": "workspace:*",
         "@types/fs-extra": "^11.0.4",
         "tsup": "^8.0.1",
         "typescript": "^5.3.3"

@@ -1,3 +1,6 @@
+export { default as chalk } from "chalk";
+export { default as fs } from "fs-extra";
+export { default as ora } from "ora";
 export * from "./lib/exec";
 export * from "./lib/fetch";
 export * from "./lib/getUserPkgManager";

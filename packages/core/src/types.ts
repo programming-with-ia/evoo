@@ -81,13 +81,7 @@ type Questions = {
  */
 type ForJob<
     T extends Record<string, unknown>,
-    Type extends
-        | "question"
-        | "group"
-        | "file"
-        | "dependencies"
-        | "run"
-        | "log",
+    Type extends "question" | "group" | "file" | "dependencies" | "run" | "log",
 > = T & {
     /**
      * A unique identifier for the job. It's used to reference the job's

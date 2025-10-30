@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 import {
     type CliOptions,
+    chalk,
     config,
+    fs,
     globals as G,
     installDependencies,
     type JsonStructure,
     logger,
+    ora,
     type Settings,
     sharedData,
 } from "@evoo/core";
-import chalk from "chalk";
 import { Command } from "commander";
-import fs from "fs-extra";
-import ora from "ora";
+
 import path from "path";
 import { processJson } from "./processJson";
 

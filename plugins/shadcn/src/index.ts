@@ -1,7 +1,7 @@
 import {
     execWithSpinner,
-    getUserPkgManager,
     globals as G,
+    getUserPkgManager,
     logger,
     type Plugin,
 } from "@evoo/core";

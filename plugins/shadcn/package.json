@@ -1,7 +1,6 @@
 {
     "name": "@evoo/plugin-shadcn",
-    "version": "0.0.0",
-    "private": true,
+    "version": "1.0.0-alpha.1",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
@@ -11,11 +10,10 @@
         "lint": "biome lint .",
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {
+    "peerDependencies": {
         "@evoo/core": "workspace:*"
     },
     "devDependencies": {
-        "tsup": "^8.0.1",
-        "typescript": "^5.3.3"
+        "@evoo/core": "workspace:*"
     }
 }
