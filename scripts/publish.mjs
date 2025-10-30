@@ -32,6 +32,22 @@ async function getPackages(dir) {
 
 import { writeFile } from 'node:fs/promises';
 
+function getTagFromVersion(version) {
+    const semverRegex = /^\d+\.\d+\.\d+$/;
+    const preReleaseRegex = /^\d+\.\d+\.\d+-([a-zA-Z]+)(?:\.\d+)?$/;
+
+    if (semverRegex.test(version)) {
+        return 'latest';
+    }
+
+    const preReleaseMatch = version.match(preReleaseRegex);
+    if (preReleaseMatch) {
+        return preReleaseMatch[1];
+    }
+
+    throw new Error(`Invalid version format: ${version}. Cannot determine npm tag.`);
+}
+
 async function publishPackage(pkg, isCli = false) {
     console.log(`\nChecking package: ${pkg.name}@${pkg.version}`);
     let shouldPublish = false;
@@ -57,8 +73,9 @@ async function publishPackage(pkg, isCli = false) {
     }
 
     if (shouldPublish) {
-        console.log(`Publishing ${pkg.name}@${pkg.version}...`);
-        await execa('npm', ['publish', '--access', 'public'], { cwd: pkg.path, stdio: 'inherit' });
+        const tag = getTagFromVersion(pkg.version);
+        console.log(`Publishing ${pkg.name}@${pkg.version} with tag "${tag}"...`);
+        await execa('npm', ['publish', '--access', 'public', '--tag', tag], { cwd: pkg.path, stdio: 'inherit' });
         console.log(`Successfully published ${pkg.name}@${pkg.version}`);
 
         if (isCli) {
@@ -83,7 +100,9 @@ async function publishCliAlias(cliPkg) {
 
         console.log(`Temporarily changed package name to "${aliasPkgName}"`);
 
-        await execa('npm', ['publish', '--access', 'public'], { cwd: cliBuildPath, stdio: 'inherit' });
+        const tag = getTagFromVersion(cliPkg.version);
+        console.log(`Publishing ${aliasPkgName}@${cliPkg.version} with tag "${tag}"...`);
+        await execa('npm', ['publish', '--access', 'public', '--tag', tag], { cwd: cliBuildPath, stdio: 'inherit' });
         console.log(`Successfully published ${aliasPkgName}@${cliPkg.version}`);
 
     } catch (error) {
