@@ -7,6 +7,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = resolve(__dirname, '..');
 
+async function performPublish(pkg) {
+    const tag = getTagFromVersion(pkg.version);
+    console.log(`Publishing ${pkg.name}@${pkg.version} with tag "${tag}"...`);
+    await execa('npm', ['publish', '--access', 'public', '--tag', tag], { cwd: pkg.path, stdio: 'inherit' });
+    console.log(`Successfully published ${pkg.name}@${pkg.version}`);
+}
+
 async function getPackages(dir) {
     const packagesDir = join(rootDir, dir);
     const packageDirs = await readdir(packagesDir, { withFileTypes: true });
@@ -73,10 +80,7 @@ async function publishPackage(pkg, isCli = false) {
     }
 
     if (shouldPublish) {
-        const tag = getTagFromVersion(pkg.version);
-        console.log(`Publishing ${pkg.name}@${pkg.version} with tag "${tag}"...`);
-        await execa('npm', ['publish', '--access', 'public', '--tag', tag], { cwd: pkg.path, stdio: 'inherit' });
-        console.log(`Successfully published ${pkg.name}@${pkg.version}`);
+        await performPublish(pkg);
 
         if (isCli) {
             await publishCliAlias(pkg);
@@ -87,43 +91,31 @@ async function publishPackage(pkg, isCli = false) {
 async function publishCliAlias(cliPkg) {
     console.log('\nPublishing evoo alias...');
     const aliasPkgName = 'evoo';
-    const sourcePackageJsonPath = join(cliPkg.path, 'package.json');
-    const cliBuildPath = join(cliPkg.path, 'dist');
-    const tempPackageJsonPath = join(cliBuildPath, 'package.json');
+    const packageJsonPath = join(cliPkg.path, 'package.json');
+    let originalPackageJsonContent;
 
     try {
-        // 1. Read the original package.json from the package root
-        const originalPackageJsonContent = await readFile(sourcePackageJsonPath, 'utf-8');
+        originalPackageJsonContent = await readFile(packageJsonPath, 'utf-8');
         const packageJson = JSON.parse(originalPackageJsonContent);
-
-        // 2. Modify the name for the alias
         packageJson.name = aliasPkgName;
-
-        // 3. IMPORTANT: Adjust binary paths to be relative to the 'dist' directory
-        if (packageJson.bin) {
-            for (const key in packageJson.bin) {
-                // Converts "dist/index.js" to "index.js"
-                packageJson.bin[key] = packageJson.bin[key].replace(/^dist\//, '');
-            }
-        }
         
-        // 4. Write the temporary, modified package.json into the 'dist' directory
-        await writeFile(tempPackageJsonPath, JSON.stringify(packageJson, null, 2));
-        console.log(`Created temporary package.json for alias "${aliasPkgName}"`);
+        await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+        console.log(`Temporarily updated package.json to name "${aliasPkgName}"`);
 
-        // 5. Publish from the 'dist' directory
-        const tag = getTagFromVersion(cliPkg.version);
-        console.log(`Publishing ${aliasPkgName}@${cliPkg.version} with tag "${tag}"...`);
-        await execa('npm', ['publish', '--access', 'public', '--tag', tag], { cwd: cliBuildPath, stdio: 'inherit' });
-        console.log(`Successfully published ${aliasPkgName}@${cliPkg.version}`);
+        await performPublish({
+            name: aliasPkgName,
+            version: cliPkg.version,
+            path: cliPkg.path
+        });
 
     } catch (error) {
         console.error('Error publishing CLI alias:', error);
         process.exit(1);
     } finally {
-        // 6. Clean up by deleting the temporary package.json
-        await rm(tempPackageJsonPath, { force: true });
-        console.log('Cleaned up temporary package.json.');
+        if (originalPackageJsonContent) {
+            await writeFile(packageJsonPath, originalPackageJsonContent);
+            console.log('Restored original package.json.');
+        }
     }
 }
 
@@ -187,7 +179,6 @@ async function main() {
 
     const packages = await getPackages('packages');
     const plugins = await getPackages('plugins');
-
     const allPackages = [...packages, ...plugins];
 
     const publishOrder = ['@evoo/core', '@evoo/cli'];
