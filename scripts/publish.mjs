@@ -1,8 +1,10 @@
-import { readdir, readFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { readFile, writeFile, rm, readdir } from 'node:fs/promises';
+import { join, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execa } from 'execa';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const rootDir = resolve(__dirname, '..');
 
 async function getPackages(dir) {
@@ -29,8 +31,6 @@ async function getPackages(dir) {
     }
     return packagePaths;
 }
-
-import { writeFile } from 'node:fs/promises';
 
 function getTagFromVersion(version) {
     const semverRegex = /^\d+\.\d+\.\d+$/;
@@ -87,19 +87,31 @@ async function publishPackage(pkg, isCli = false) {
 async function publishCliAlias(cliPkg) {
     console.log('\nPublishing evoo alias...');
     const aliasPkgName = 'evoo';
+    const sourcePackageJsonPath = join(cliPkg.path, 'package.json');
     const cliBuildPath = join(cliPkg.path, 'dist');
-    const packageJsonPath = join(cliBuildPath, 'package.json');
-    let originalPackageJsonContent = null;
+    const tempPackageJsonPath = join(cliBuildPath, 'package.json');
 
     try {
-        originalPackageJsonContent = await readFile(packageJsonPath, 'utf-8');
+        // 1. Read the original package.json from the package root
+        const originalPackageJsonContent = await readFile(sourcePackageJsonPath, 'utf-8');
         const packageJson = JSON.parse(originalPackageJsonContent);
+
+        // 2. Modify the name for the alias
         packageJson.name = aliasPkgName;
 
-        await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+        // 3. IMPORTANT: Adjust binary paths to be relative to the 'dist' directory
+        if (packageJson.bin) {
+            for (const key in packageJson.bin) {
+                // Converts "dist/index.js" to "index.js"
+                packageJson.bin[key] = packageJson.bin[key].replace(/^dist\//, '');
+            }
+        }
+        
+        // 4. Write the temporary, modified package.json into the 'dist' directory
+        await writeFile(tempPackageJsonPath, JSON.stringify(packageJson, null, 2));
+        console.log(`Created temporary package.json for alias "${aliasPkgName}"`);
 
-        console.log(`Temporarily changed package name to "${aliasPkgName}"`);
-
+        // 5. Publish from the 'dist' directory
         const tag = getTagFromVersion(cliPkg.version);
         console.log(`Publishing ${aliasPkgName}@${cliPkg.version} with tag "${tag}"...`);
         await execa('npm', ['publish', '--access', 'public', '--tag', tag], { cwd: cliBuildPath, stdio: 'inherit' });
@@ -109,10 +121,9 @@ async function publishCliAlias(cliPkg) {
         console.error('Error publishing CLI alias:', error);
         process.exit(1);
     } finally {
-        if (originalPackageJsonContent) {
-            await writeFile(packageJsonPath, originalPackageJsonContent);
-            console.log('Restored original package.json in dist.');
-        }
+        // 6. Clean up by deleting the temporary package.json
+        await rm(tempPackageJsonPath, { force: true });
+        console.log('Cleaned up temporary package.json.');
     }
 }
 
