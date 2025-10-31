@@ -24,13 +24,7 @@
         "components",
         "ui"
     ],
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        }
-    },
+    "exports": "./dist/index.js",
     "sideEffects": false,
     "files": [
         "dist",
