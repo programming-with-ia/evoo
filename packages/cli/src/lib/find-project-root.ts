@@ -1,5 +1,5 @@
+import path from "node:path";
 import { fs } from "@evoo/core";
-import path from "path";
 
 // Use a sentinel value to distinguish between "not yet searched" (undefined)
 // and "searched and not found" (null).

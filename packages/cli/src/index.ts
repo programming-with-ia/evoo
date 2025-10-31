@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+import path from "node:path";
 import {
     type CliOptions,
     chalk,
@@ -13,8 +15,6 @@ import {
     sharedData,
 } from "@evoo/core";
 import { Command } from "commander";
-
-import path from "path";
 import { processJson } from "./processJson";
 
 const storeFile = ".evoo.json";

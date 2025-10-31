@@ -48,7 +48,6 @@ const addShadcnComponents = async (components: string[]) => {
         case "bun":
             command = `bunx --bun shadcn-ui@latest add ${componentsString}`;
             break;
-        case "npm":
         default:
             command = `npx shadcn-ui@latest add ${componentsString}`;
             break;

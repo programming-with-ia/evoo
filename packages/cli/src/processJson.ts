@@ -1,3 +1,4 @@
+import path from "node:path";
 import {
     Consts,
     Fetch,
@@ -15,7 +16,6 @@ import {
     setDeepValue,
     sharedData,
 } from "@evoo/core";
-import path from "path";
 import { evaluateWhen } from "./lib/evaluateWhen";
 import { getJobExecutor, loadPlugin } from "./lib/pluginManager";
 

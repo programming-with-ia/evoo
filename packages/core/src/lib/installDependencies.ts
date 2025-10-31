@@ -1,10 +1,9 @@
+import path from "node:path";
 import { execa } from "execa";
 import fs from "fs-extra";
-import path from "path";
 import type { JsonStructure } from "../types";
 import { execWithSpinner } from "./exec";
 import { getUserPkgManager } from "./getUserPkgManager";
-import { globals as G } from "./globals";
 import { logger } from "./logger";
 import { prompts } from "./prompts";
 

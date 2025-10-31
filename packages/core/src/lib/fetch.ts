@@ -12,10 +12,10 @@ export async function Fetch<T>(
 
     if (url.startsWith("https://raw.githubusercontent.com") && token) {
         logger.log("with token");
-        headers["Authorization"] = `Bearer ${token}`;
+        headers.Authorization = `Bearer ${token}`;
     }
     try {
-        G.spinner.text = "fetch " + url;
+        G.spinner.text = `fetch ${url}`;
         const response = await fetch(url, { headers });
 
         if (!response.ok) {
