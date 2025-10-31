@@ -1,6 +1,7 @@
 {
     "name": "@evoo/plugin-placeholder",
     "version": "0.0.0",
+    "type": "module",
     "private": true,
     "author": "immi",
     "license": "MIT",
@@ -20,9 +21,13 @@
         "scaffolding",
         "example"
     ],
-    "main": "./dist/index.js",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        }
+    },
     "sideEffects": false,
     "files": [
         "dist",
