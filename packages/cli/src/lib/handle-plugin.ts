@@ -1,6 +1,5 @@
 import { createRequire } from "node:module";
-import { installDependencies } from "@evoo/core";
-import fs from "fs-extra";
+import { fs, installDependencies } from "@evoo/core";
 import os from "os";
 import path from "path";
 import { findProjectRoot } from "./find-project-root";

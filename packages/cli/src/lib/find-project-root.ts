@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import { fs } from "@evoo/core";
 import path from "path";
 
 // Use a sentinel value to distinguish between "not yet searched" (undefined)

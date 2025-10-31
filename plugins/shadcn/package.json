@@ -1,6 +1,6 @@
 {
     "name": "@evoo/plugin-shadcn",
-    "version": "1.0.0-alpha.3",
+    "version": "1.0.0-alpha.4",
     "author": "immi",
     "license": "MIT",
     "homepage": "https://github.com/programming-with-ia/evoo",
@@ -23,9 +23,13 @@
         "components",
         "ui"
     ],
-    "main": "./dist/index.js",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
     "sideEffects": false,
     "files": [
         "dist",

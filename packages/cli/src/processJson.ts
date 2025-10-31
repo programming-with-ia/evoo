@@ -2,6 +2,7 @@ import {
     Consts,
     Fetch,
     type FileType,
+    fs,
     globals as G,
     getValueFromSource,
     handleFilePath,
@@ -14,7 +15,6 @@ import {
     setDeepValue,
     sharedData,
 } from "@evoo/core";
-import fs from "fs-extra";
 import path from "path";
 import { evaluateWhen } from "./lib/evaluateWhen";
 import { getJobExecutor, loadPlugin } from "./lib/pluginManager";
