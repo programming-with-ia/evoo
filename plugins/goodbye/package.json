@@ -22,7 +22,12 @@
         "scaffolding",
         "learning"
     ],
-    "exports": "./dist/index.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
     "sideEffects": false,
     "files": [
         "dist",

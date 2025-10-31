@@ -1,11 +1,11 @@
 import {
     execWithSpinner,
+    fs,
     globals as G,
     getUserPkgManager,
     logger,
     type Plugin,
 } from "@evoo/core";
-import fs from "fs-extra";
 
 type RegistryDependenciesJob = {
     type: "registryDependencies";
