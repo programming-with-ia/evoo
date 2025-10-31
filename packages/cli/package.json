@@ -1,6 +1,7 @@
 {
     "name": "@evoo/cli",
     "version": "1.0.0-alpha.1",
+    "type": "module",
     "author": "immi",
     "license": "MIT",
     "homepage": "https://github.com/programming-with-ia/evoo",
@@ -27,9 +28,9 @@
     "bin": "./dist/index.js",
     "exports": {
         ".": {
+            "types": "./dist/index.d.ts",
             "import": "./dist/index.mjs",
-            "require": "./dist/index.js",
-            "types": "./dist/index.d.ts"
+            "require": "./dist/index.js"
         }
     },
     "sideEffects": false,
