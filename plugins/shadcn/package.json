@@ -18,7 +18,11 @@
         "plugin",
         "scaffolding",
         "codemod",
-        "automation"
+        "automation",
+        "shadcn",
+        "shadcn-ui",
+        "components",
+        "ui"
     ],
     "exports": {
         ".": {
