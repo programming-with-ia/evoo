@@ -1,4 +1,4 @@
-import type { Except, SetOptional, SetRequired } from "type-fest";
+import type { Except, SetFieldType, SetOptional, SetRequired } from "type-fest";
 
 /**
  * Describes a file manipulation operation. This is a discriminated union
@@ -75,14 +75,9 @@ type Questions = {
 );
 
 /**
- * A generic wrapper that adds shared properties to a job configuration.
- * @template T The specific configuration object for the job.
- * @template Type A string literal representing the job's type.
+ * A base structure for all job types, providing common properties.
  */
-type ForJob<
-    T extends Record<string, unknown>,
-    Type extends "question" | "group" | "file" | "dependencies" | "run" | "log",
-> = T & {
+type BaseJob<Type extends string = string> = {
     /**
      * A unique identifier for the job. It's used to reference the job's
      * result or state in `when` conditions.
@@ -132,6 +127,16 @@ type ForJob<
      */
     confirm?: string;
 };
+
+/**
+ * A generic wrapper that adds shared properties to a job configuration.
+ * @template T The specific configuration object for the job.
+ * @template Type A string literal representing the job's type.
+ */
+type ForJob<
+    T extends Record<string, unknown>,
+    Type extends "question" | "group" | "file" | "dependencies" | "run" | "log",
+> = T & SetFieldType<BaseJob<Type>, "type", Type>;
 
 /**
  * Represents a single executable task (a "job") within the scaffold process.
@@ -233,4 +238,4 @@ type Settings = {
     githubToken: string;
 };
 
-export type { FileType, JsonStructure, CliOptions, Settings, Job };
+export type { FileType, JsonStructure, CliOptions, Settings, Job, BaseJob };

@@ -18,6 +18,7 @@ export const installDependencies = async (
     dev: boolean = false,
     cwd: string = process.cwd(),
     isGlobal: boolean = false,
+    legacyPeerDeps = false, // only for npm
 ) => {
     // Convert input into an array of package install strings
 
@@ -86,7 +87,12 @@ export const installDependencies = async (
             case "npm":
                 await execa(
                     "npm",
-                    ["install", ...filteredPackages, devFlag],
+                    [
+                        "install",
+                        ...filteredPackages,
+                        ...(legacyPeerDeps ? ["--legacy-peer-deps"] : []),
+                        devFlag,
+                    ],
                     execOptions,
                 );
                 return null;

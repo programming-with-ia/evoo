@@ -1,11 +1,25 @@
+import { pathToFileURL } from "node:url";
 import { logger, type Plugin, sharedData } from "@evoo/core";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
 
 // biome-ignore lint/suspicious/noExplicitAny: This is a generic plugin manager
 const loadedPlugins = new Map<string, Plugin<any, any>>();
 
+export function getPluginName(pluginIdentifier: string) {
+    if (!pluginIdentifier.startsWith("@")) {
+        return pluginIdentifier.split("@")[0];
+    }
+
+    const parts = pluginIdentifier.split("@");
+    if (parts.length > 2) {
+        return `@${parts[1]}`;
+    }
+
+    return pluginIdentifier;
+}
+
 export function isPluginLoaded(pluginName: string): boolean {
-    return loadedPlugins.has(pluginName);
+    return loadedPlugins.has(getPluginName(pluginName));
 }
 
 export function registerPlugin(
@@ -13,8 +27,9 @@ export function registerPlugin(
     // biome-ignore lint/suspicious/noExplicitAny: This is a generic plugin manager
     plugin: Plugin<any, any>,
 ): void {
-    if (loadedPlugins.has(pluginName)) {
-        logger.warn(`Plugin '${pluginName}' is already loaded.`);
+    const name = getPluginName(pluginName);
+    if (loadedPlugins.has(name)) {
+        logger.warn(`Plugin '${name}' is already loaded.`);
         return;
     }
     if (plugin.onStart) {
@@ -26,16 +41,16 @@ export function registerPlugin(
     if (plugin.onDone) {
         sharedData.onDoneCallbacks.push(plugin.onDone);
     }
-    loadedPlugins.set(pluginName, plugin);
+    loadedPlugins.set(name, plugin);
 }
 
-export async function loadPlugin(pluginName: string): Promise<void> {
-    if (isPluginLoaded(pluginName)) {
+export async function loadPlugin(pluginIdentifier: string): Promise<void> {
+    if (isPluginLoaded(pluginIdentifier)) {
         return;
     }
 
+    const pluginName = getPluginName(pluginIdentifier);
     let pluginPath = await resolvePlugin(pluginName);
-
     if (!pluginPath) {
         //!
         // if (
@@ -48,25 +63,25 @@ export async function loadPlugin(pluginName: string): Promise<void> {
         // }
 
         logger.warn(
-            `Plugin '${pluginName}' not found. Attempting to install it...`,
+            `Plugin '${pluginIdentifier}' not found. Attempting to install it...`,
         );
         try {
-            await installPlugin(pluginName);
+            await installPlugin(pluginIdentifier);
             pluginPath = await resolvePlugin(pluginName);
 
             if (!pluginPath) {
                 throw new Error(
-                    `Failed to resolve plugin '${pluginName}' after installation.`,
+                    `Failed to resolve plugin '${pluginIdentifier}' after installation.`,
                 );
             }
         } catch (installError) {
-            logger.error(`Failed to install plugin '${pluginName}'.`);
+            logger.error(`Failed to install plugin '${pluginIdentifier}'.`);
             throw installError;
         }
     }
 
-    const plugin = await import(pluginPath);
-    registerPlugin(pluginName, plugin.default);
+    const plugin = await import(pathToFileURL(pluginPath).href);
+    registerPlugin(pluginIdentifier, plugin.default);
 }
 
 export function getJobExecutor(

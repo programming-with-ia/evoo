@@ -1,7 +1,9 @@
+import type { BaseJob } from "./types";
+
 /**
  * Every custom job type should at least have a `type` property.
  */
-export type CustomJobType = { type: string } & Record<string, unknown>;
+export type CustomJobType = BaseJob & Record<string, unknown>;
 
 type JobExecutor<T, C> = (job: T, sharedContext: C) => Promise<void>;
 
