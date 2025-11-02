@@ -18,7 +18,10 @@
         "plugin",
         "scaffolding",
         "codemod",
-        "automation"
+        "automation",
+        "exec",
+        "shell",
+        "command"
     ],
     "exports": {
         ".": {

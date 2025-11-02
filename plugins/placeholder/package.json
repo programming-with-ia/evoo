@@ -19,7 +19,10 @@
         "plugin",
         "scaffolding",
         "codemod",
-        "automation"
+        "automation",
+        "template",
+        "placeholder",
+        "example"
     ],
     "exports": {
         ".": {
