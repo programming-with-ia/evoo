@@ -12,6 +12,8 @@ The Executor plugin for the Evoo CLI allows you to run shell commands as part of
 
 To use the Executor plugin, you will need to add an `exec` job to your `evoo.json` configuration file.
 
+See the [Job's common properties](https://github.com/programming-with-ia/evoo?tab=readme-ov-file#the-job-object).
+
 ### The `exec` Job
 
 | Property | Type | Required | Description |

@@ -14,12 +14,11 @@
     },
     "keywords": [
         "evoo",
+        "evoo-plugin",
         "plugin",
-        "exec",
-        "shell",
-        "command",
-        "automation",
-        "scaffolding"
+        "scaffolding",
+        "codemod",
+        "automation"
     ],
     "exports": {
         ".": {

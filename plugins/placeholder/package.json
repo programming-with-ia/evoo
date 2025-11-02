@@ -15,11 +15,11 @@
     },
     "keywords": [
         "evoo",
+        "evoo-plugin",
         "plugin",
-        "template",
-        "placeholder",
         "scaffolding",
-        "example"
+        "codemod",
+        "automation"
     ],
     "exports": {
         ".": {

@@ -12,6 +12,8 @@ The Placeholder plugin is a template designed to serve as a starting point for c
 
 This plugin is not intended for direct use in production but rather as a template to be copied and modified. By examining its source code, you can gain a deeper understanding of the Evoo plugin architecture and learn how to build your own custom plugins.
 
+See the [Job's common properties](https://github.com/programming-with-ia/evoo?tab=readme-ov-file#the-job-object).
+
 ### The `greet` Job
 
 The `greet` job logs a message from the shared context and an optional message provided in the job configuration.
