@@ -13,16 +13,12 @@
         "url": "https://github.com/programming-with-ia/evoo/issues"
     },
     "keywords": [
-        "shadcn",
-        "shadcn-ui",
         "evoo",
         "evoo-plugin",
         "plugin",
         "scaffolding",
         "codemod",
-        "automation",
-        "components",
-        "ui"
+        "automation"
     ],
     "exports": {
         ".": {

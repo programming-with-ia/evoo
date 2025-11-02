@@ -12,6 +12,8 @@ The File Templates plugin for the Evoo CLI offers a powerful way to reuse conten
 
 To use the File Templates plugin, you need to define your templates in the `sharedContext` and then reference them in your `file` jobs.
 
+See the [Job's common properties](https://github.com/programming-with-ia/evoo?tab=readme-ov-file#the-job-object).
+
 ### 1. Define Templates in `sharedContext`
 
 In your `evoo.json`, add a `templates` object to the `sharedContext`. Each key in this object is a template name, and its value is the content you want to reuse.
