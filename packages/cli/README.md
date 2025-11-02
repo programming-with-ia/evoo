@@ -310,6 +310,26 @@ Ask for a component name and use it to generate a file with the correct name and
 
 The true power of the Evoo CLI lies in its plugin system. If you are interested in creating your own plugins, please refer to the [Plugin Development Guide](../core/README.md) in the `@evoo/core` package for detailed documentation and best practices.
 
+### Direct Plugin Loading
+
+In addition to loading plugins from `node_modules`, Evoo supports "direct plugin loading," which allows you to load a plugin directly from a URL without needing to install it as a package. This is particularly useful for testing or using community-provided plugins without adding them to your project's dependencies.
+
+To use a direct plugin, prefix the plugin identifier with an exclamation mark (`!`) in your `evoo.json` file:
+
+```json
+{
+  "plugins": ["!@evoo/plugin-shadcn"]
+}
+```
+
+When a direct plugin is used, the following happens:
+
+1.  **URL Resolution**: The plugin is resolved to a `unpkg.com` URL. For example, `!@evoo/plugin-shadcn` becomes `https://unpkg.com/@evoo/plugin-shadcn/dist/index.js`.
+2.  **Versioning**: You can specify a version (e.g., `!@evoo/plugin-shadcn@1.0.0-alpha.6`). If no version is provided, the `latest` version is automatically fetched from the npm registry.
+3.  **Local Caching**: The downloaded plugin is cached in your home directory (`~/.evoo/direct-plugins`). On subsequent runs, the cached version is used, avoiding unnecessary downloads.
+
+This feature provides a more flexible way to use and distribute plugins, making it easier to share and experiment with new automations.
+
 ## 🔒 Configuration & Authentication
 
 Evoo can store a GitHub personal access token to fetch configurations from private repositories.
