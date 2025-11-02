@@ -1,9 +1,3 @@
-import type { Ora } from "ora";
-
-export const globals = {
-    spinner: null as unknown as Ora,
-};
-
 export const Consts = {
     CODE_RED: -1,
     isCodeRed(v: unknown): v is -1 {

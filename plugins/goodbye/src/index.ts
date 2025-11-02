@@ -1,20 +1,20 @@
-import { logger, type Plugin } from "@evoo/core";
+import type { Plugin } from "@evoo/core";
 
 type GoodbyeJob = {
     type: "goodbye";
     message?: string;
 };
 
-const goodbyePlugin: Plugin<{ goodbye: GoodbyeJob }> = {
+const goodbyePlugin: Plugin<{ goodbye: GoodbyeJob }> = (core) => ({
     jobs: {
         goodbye: async (job) => {
-            logger.info("Goodbye from the goodbye plugin!");
+            core.logger.info("Goodbye from the goodbye plugin!");
 
             if (job.message) {
-                logger.log(`Your message is: ${job.message}`);
+                core.logger.log(`Your message is: ${job.message}`);
             }
         },
     },
-};
+});
 
 export default goodbyePlugin;

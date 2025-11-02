@@ -114,8 +114,9 @@ type BaseJob<Type extends string = string> = {
     when?: string;
     /**
      * The type of the job.
+     * default: 'file'
      */
-    type: Type;
+    type?: Type;
 
     /**
      * A confirmation prompt to show before executing the job.

@@ -1,9 +1,9 @@
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { fs, installDependencies } from "@evoo/core";
 import { findProjectRoot } from "./find-project-root";
-import { pathToFileURL } from "node:url";
 
 const globalPluginDir = path.join(os.homedir(), ".evoo", "plugins");
 
@@ -64,7 +64,7 @@ export async function resolvePlugin(
     pluginName: string,
 ): Promise<string | null> {
     const { pluginDir } = await getPluginStrategy();
-    console.log(pluginDir, pluginName);
+
     const pluginPackageJsonPath = path.join(
         pluginDir,
         "node_modules",
@@ -72,7 +72,7 @@ export async function resolvePlugin(
         "package.json",
     );
 
-    if (!fs.existsSync(pluginPackageJsonPath)){
+    if (!fs.existsSync(pluginPackageJsonPath)) {
         return null;
     }
 

@@ -10,6 +10,7 @@ export * from "./lib/helpers";
 export * from "./lib/installDependencies";
 export * from "./lib/logger";
 export * from "./lib/match-vars";
+export { Core } from "./lib/plugin-arg";
 export * from "./lib/prompts";
 export * from "./lib/setting";
 export * from "./lib/shared";

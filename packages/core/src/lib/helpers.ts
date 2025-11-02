@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: This is a generic helper */
-import { globals as G } from "./globals";
+import { sharedData } from "./shared";
 
 /**
  * A higher-order function that wraps another function to manage an Ora spinner.
@@ -16,11 +16,11 @@ import { globals as G } from "./globals";
  */
 export function withSpinner<T extends (...args: any[]) => any>(fn: T): T {
     return ((...args: Parameters<T>): ReturnType<T> => {
-        const spinning = G.spinner.isSpinning;
-        const t = G.spinner.text;
+        const spinning = sharedData.spinner.isSpinning;
+        const t = sharedData.spinner.text;
 
         if (spinning) {
-            G.spinner.stop();
+            sharedData.spinner.stop();
         }
 
         let result: unknown;
@@ -29,14 +29,14 @@ export function withSpinner<T extends (...args: any[]) => any>(fn: T): T {
             if (result instanceof Promise) {
                 return result.finally(() => {
                     if (spinning) {
-                        G.spinner.start(t);
+                        sharedData.spinner.start(t);
                     }
                 }) as ReturnType<T>;
             }
             return result as ReturnType<T>;
         } finally {
             if (!(result instanceof Promise) && spinning) {
-                G.spinner.start(t);
+                sharedData.spinner.start(t);
             }
         }
     }) as T;

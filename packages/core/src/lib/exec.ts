@@ -1,6 +1,6 @@
 import { execaCommand } from "execa";
-import { globals as G } from "./globals";
 import { logger } from "./logger";
+import { sharedData } from "./shared";
 
 /**
  * Executes command with Ora spinner.
@@ -23,8 +23,8 @@ export const execWithSpinner = async (
         successMessage,
     } = options;
 
-    G.spinner.text = startMessage ?? `Running ${command}...`;
-    logger.info(G.spinner.text);
+    sharedData.spinner.text = startMessage ?? `Running ${command}...`;
+    logger.info(sharedData.spinner.text);
 
     const subprocess = execaCommand(command, { cwd, stdout });
 
@@ -35,7 +35,7 @@ export const execWithSpinner = async (
 
         subprocess.on("error", (e) => {
             logger.error(e.message);
-            G.spinner.fail(`Error: ${e.message}`);
+            sharedData.spinner.fail(`Error: ${e.message}`);
             rej(e);
         });
 

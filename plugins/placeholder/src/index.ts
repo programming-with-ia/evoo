@@ -1,4 +1,4 @@
-import { logger, type Plugin } from "@evoo/core";
+import type { Plugin } from "@evoo/core";
 
 type GreetJob = {
     type: "greet";
@@ -9,29 +9,31 @@ type PlaceholderSharedContext = {
     greetings: string;
 };
 
-const placeholderPlugin: Plugin<{ greet: GreetJob }, PlaceholderSharedContext> =
-    {
-        jobs: {
-            greet: async (job, context) => {
-                logger.info(context.greetings);
+const placeholderPlugin: Plugin<
+    { greet: GreetJob },
+    PlaceholderSharedContext
+> = (core) => ({
+    jobs: {
+        greet: async (job, context) => {
+            core.logger.info(context.greetings);
 
-                if (job.message) {
-                    logger.log(`Your message is: ${job.message}`);
-                }
-            },
+            if (job.message) {
+                core.logger.log(`Your message is: ${job.message}`);
+            }
         },
-        onStart: async (context) => {
-            logger.info("Placeholder plugin started!");
-            logger.info(`Greetings from shared context: ${context.greetings}`);
-        },
-        onComplete: async (context) => {
-            logger.info("Placeholder plugin completed!");
-            logger.info(`Greetings from shared context: ${context.greetings}`);
-        },
-        onDone: async (context) => {
-            logger.info("Placeholder plugin done!");
-            logger.info(`Greetings from shared context: ${context.greetings}`);
-        },
-    };
+    },
+    onStart: async (context) => {
+        core.logger.info("Placeholder plugin started!");
+        core.logger.info(`Greetings from shared context: ${context.greetings}`);
+    },
+    onComplete: async (context) => {
+        core.logger.info("Placeholder plugin completed!");
+        core.logger.info(`Greetings from shared context: ${context.greetings}`);
+    },
+    onDone: async (context) => {
+        core.logger.info("Placeholder plugin done!");
+        core.logger.info(`Greetings from shared context: ${context.greetings}`);
+    },
+});
 
 export default placeholderPlugin;

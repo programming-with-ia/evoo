@@ -4,7 +4,6 @@ import {
     Fetch,
     type FileType,
     fs,
-    globals as G,
     getValueFromSource,
     handleFilePath,
     isValidUrl,
@@ -24,8 +23,8 @@ export async function processJson(
 ): Promise<Record<string, unknown> | undefined> {
     //
     // handle json local or remote file
-    G.spinner.text = `Processing Json Data: ${jsonPath}`;
-    logger.info(G.spinner.text);
+    sharedData.spinner.text = `Processing Json Data: ${jsonPath}`;
+    logger.info(sharedData.spinner.text);
 
     const { cliOptions } = sharedData;
 
@@ -103,7 +102,7 @@ async function processJobs({
 }
 
 async function processJob({
-    job,
+    job: _job,
     basePath,
     definitions,
     sharedContext,
@@ -113,6 +112,12 @@ async function processJob({
     definitions?: JsonStructure["definitions"];
     sharedContext?: Record<string, unknown>;
 }) {
+    let job = _job;
+
+    for (const jModifier of sharedData.jobModifierCallbacks) {
+        job = await jModifier(job, sharedContext);
+    }
+
     const { when, id, confirm } = job;
 
     if (
@@ -146,7 +151,7 @@ async function processJob({
 
     //
     if (!job.type || job.type === "file") {
-        await processFile({ file: job, basePath });
+        await processFile({ file: job as FileType, basePath });
         //
         // handle question
     } else if (job.type === "question") {
@@ -154,7 +159,6 @@ async function processJob({
         const { defaultValue, question, id, questionType } = job;
         let answer: symbol | boolean | string = "";
 
-        console.log("");
         // if startswith @ and in sharedData.storedData
         // if startswith # and in sharedData.jobResults
         // if not startswith @ | # and in sharedData.jobResults
@@ -296,12 +300,11 @@ async function processFile({
             path.isAbsolute(file.content) &&
             fs.pathExistsSync(file.content)
         ) {
-            console.log(file.content);
             file.content = fs.readFileSync(file.content, "utf-8");
         }
     }
 
-    G.spinner.text = `writing file ${newFilePath}`;
+    sharedData.spinner.text = `writing file ${newFilePath}`;
     if (file.method === "replace") {
         let existingContent = fs.readFileSync(newFilePath, "utf-8");
         for (let [key, value] of Object.entries(file.content)) {

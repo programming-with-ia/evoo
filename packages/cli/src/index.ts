@@ -6,7 +6,6 @@ import {
     chalk,
     config,
     fs,
-    globals as G,
     installDependencies,
     type JsonStructure,
     logger,
@@ -30,7 +29,7 @@ program
         "extend files path from current working dir",
     )
     .action(async (jsonPath: string, options: CliOptions) => {
-        G.spinner = ora("Fetching JSON...").start();
+        sharedData.spinner = ora("Fetching JSON...").start();
 
         try {
             if (options.dir) {
@@ -66,9 +65,11 @@ program
                 await cb(sharedContext);
             }
 
-            G.spinner.succeed("Files added successfully!");
+            sharedData.spinner.succeed("Files added successfully!");
         } catch (error) {
-            G.spinner.fail(chalk.red(`Error: ${(error as Error).message}`));
+            sharedData.spinner.fail(
+                chalk.red(`Error: ${(error as Error).message}`),
+            );
             throw error;
         }
     });

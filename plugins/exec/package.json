@@ -38,9 +38,6 @@
         "lint": "biome lint .",
         "typecheck": "tsc --noEmit"
     },
-    "peerDependencies": {
-        "@evoo/core": "workspace:*"
-    },
     "devDependencies": {
         "@evoo/core": "workspace:*"
     }

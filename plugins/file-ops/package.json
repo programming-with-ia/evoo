@@ -1,6 +1,6 @@
 {
-    "name": "@evoo/plugin-shadcn",
-    "version": "1.0.0-alpha.6",
+    "name": "@evoo/plugin-file-ops",
+    "version": "1.0.0-alpha.1",
     "type": "module",
     "author": "immi",
     "license": "MIT",
@@ -13,16 +13,12 @@
         "url": "https://github.com/programming-with-ia/evoo/issues"
     },
     "keywords": [
-        "shadcn",
-        "shadcn-ui",
         "evoo",
         "evoo-plugin",
         "plugin",
         "scaffolding",
         "codemod",
-        "automation",
-        "components",
-        "ui"
+        "automation"
     ],
     "exports": {
         ".": {

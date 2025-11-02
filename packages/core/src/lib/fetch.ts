@@ -1,6 +1,6 @@
-import { globals as G } from "./globals";
 import { logger } from "./logger";
 import { config } from "./setting";
+import { sharedData } from "./shared";
 
 /* fetch with Github auth */
 export async function Fetch<T>(
@@ -15,11 +15,11 @@ export async function Fetch<T>(
         headers.Authorization = `Bearer ${token}`;
     }
     try {
-        G.spinner.text = `fetch ${url}`;
+        sharedData.spinner.text = `fetch ${url}`;
         const response = await fetch(url, { headers });
 
         if (!response.ok) {
-            G.spinner.fail("Fetch Error.");
+            sharedData.spinner.fail("Fetch Error.");
             throw new Error(
                 `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
             );
@@ -27,7 +27,7 @@ export async function Fetch<T>(
 
         return await response[as]();
     } catch (error) {
-        G.spinner.fail();
+        sharedData.spinner.fail();
         console.error("Error fetching file:", error);
         throw error;
     }

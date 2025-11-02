@@ -95,12 +95,23 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
 
-  plugins/goodbye:
-    dependencies:
+  plugins/file-content:
+    devDependencies:
       '@evoo/core':
         specifier: workspace:*
         version: link:../../packages/core
+
+  plugins/file-ops:
     devDependencies:
+      '@evoo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+
+  plugins/goodbye:
+    devDependencies:
+      '@evoo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       tsup:
         specifier: ^8.0.1
         version: 8.3.6(@swc/core@1.13.5)(jiti@2.6.1)(tsx@4.20.6)(typescript@5.7.3)
@@ -109,11 +120,10 @@ importers:
         version: 5.7.3
 
   plugins/placeholder:
-    dependencies:
+    devDependencies:
       '@evoo/core':
         specifier: workspace:*
         version: link:../../packages/core
-    devDependencies:
       tsup:
         specifier: ^8.0.1
         version: 8.3.6(@swc/core@1.13.5)(jiti@2.6.1)(tsx@4.20.6)(typescript@5.7.3)

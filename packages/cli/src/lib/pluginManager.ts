@@ -1,9 +1,15 @@
 import { pathToFileURL } from "node:url";
-import { logger, type Plugin, sharedData } from "@evoo/core";
+import {
+    Core,
+    logger,
+    type Plugin,
+    type PluginData,
+    sharedData,
+} from "@evoo/core";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
 
 // biome-ignore lint/suspicious/noExplicitAny: This is a generic plugin manager
-const loadedPlugins = new Map<string, Plugin<any, any>>();
+const loadedPlugins = new Map<string, PluginData>();
 
 export function getPluginName(pluginIdentifier: string) {
     if (!pluginIdentifier.startsWith("@")) {
@@ -25,13 +31,15 @@ export function isPluginLoaded(pluginName: string): boolean {
 export function registerPlugin(
     pluginName: string,
     // biome-ignore lint/suspicious/noExplicitAny: This is a generic plugin manager
-    plugin: Plugin<any, any>,
+    _plugin: Plugin<any, any>,
 ): void {
+    const plugin = _plugin(Core);
     const name = getPluginName(pluginName);
     if (loadedPlugins.has(name)) {
         logger.warn(`Plugin '${name}' is already loaded.`);
         return;
     }
+
     if (plugin.onStart) {
         sharedData.onStartCallbacks.push(plugin.onStart);
     }
@@ -40,6 +48,9 @@ export function registerPlugin(
     }
     if (plugin.onDone) {
         sharedData.onDoneCallbacks.push(plugin.onDone);
+    }
+    if (plugin.jobModifier) {
+        sharedData.jobModifierCallbacks.push(plugin.jobModifier);
     }
     loadedPlugins.set(name, plugin);
 }

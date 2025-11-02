@@ -1,0 +1,28 @@
+{
+    "plugins": ["@evoo/plugin-file-templates"],
+    "sharedContext": {
+        "templates": {
+            "page.tsx": "// file content"
+        },
+        "jobs": [
+            {
+                "id": "@useSrcDir",
+                "type": "ask",
+                "questionType": "confirm",
+                "message": "use '/src' dir"
+            },
+            {
+                "type": "file",
+                "name": "/src/page.tsx",
+                "content": "@@page.tsx",
+                "when": "@useSrcDir==true"
+            },
+            {
+                "type": "file",
+                "name": "/page.tsx",
+                "content": "@@page.tsx",
+                "when": "@useSrcDir==false"
+            }
+        ]
+    }
+}
