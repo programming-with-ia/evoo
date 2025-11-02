@@ -12,6 +12,8 @@ The Goodbye plugin is a simple, illustrative plugin for the Evoo CLI, designed t
 
 To use the Goodbye plugin, you will need to add a `goodbye` job to your `evoo.json` configuration file.
 
+See the [Job's common properties](https://github.com/programming-with-ia/evoo?tab=readme-ov-file#the-job-object).
+
 ### The `goodbye` Job
 
 | Property | Type | Required | Description |

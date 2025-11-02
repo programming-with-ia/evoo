@@ -34,6 +34,8 @@ When a user runs a scaffold with this configuration, the `button` and `card` com
 
 This method is used for components that are an **optional, conditional part of a scaffold**. It allows you to use a `when` clause, typically based on user input, to control whether the components are installed.
 
+See the [Job's common properties](https://github.com/programming-with-ia/evoo?tab=readme-ov-file#the-job-object).
+
 | Property | Type | Required | Description |
 | --- | --- | :---: | --- |
 | `type` | `"registryDependencies"` | ✔️ | Specifies the job type. |
