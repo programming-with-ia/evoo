@@ -1,12 +1,55 @@
 import { pathToFileURL } from "node:url";
 import {
-    Core,
-    logger,
-    type Plugin,
-    type PluginData,
-    sharedData,
+	Core,
+	getLatestVersion,
+	isValidUrl,
+	logger,
+	type Plugin,
+	type PluginData,
+	sharedData,
 } from "@evoo/core";
+import {
+	cacheDirectPlugin,
+	cacheUrlPlugin,
+	resolveDirectPlugin,
+} from "./handle-direct-plugin";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
+
+async function loadUrlPlugin(url: string): Promise<void> {
+	const pluginPath = await cacheUrlPlugin(url);
+	const plugin = await import(pathToFileURL(pluginPath).href);
+	registerPlugin(url, plugin.default);
+}
+
+async function loadDirectPlugin(pluginIdentifier: string): Promise<void> {
+	let pluginName: string;
+	let version: string | undefined;
+	const atIndex = pluginIdentifier.lastIndexOf("@");
+
+	if (atIndex > 0) {
+		pluginName = pluginIdentifier.substring(0, atIndex);
+		version = pluginIdentifier.substring(atIndex + 1);
+		if (version.includes("/")) {
+			pluginName = pluginIdentifier;
+			version = undefined;
+		}
+	} else {
+		pluginName = pluginIdentifier;
+		version = undefined;
+	}
+
+	if (!version || version === "latest") {
+		version = await getLatestVersion(pluginName);
+	}
+
+	let pluginPath = await resolveDirectPlugin(pluginName, version);
+	if (!pluginPath) {
+		pluginPath = await cacheDirectPlugin(pluginName, version);
+	}
+
+	const plugin = await import(pathToFileURL(pluginPath).href);
+	registerPlugin(pluginIdentifier, plugin.default);
+}
 
 // biome-ignore lint/suspicious/noExplicitAny: This is a generic plugin manager
 const loadedPlugins = new Map<string, PluginData>();
@@ -56,43 +99,52 @@ export function registerPlugin(
 }
 
 export async function loadPlugin(pluginIdentifier: string): Promise<void> {
-    if (isPluginLoaded(pluginIdentifier)) {
-        return;
-    }
+	if (isValidUrl(pluginIdentifier)) {
+		await loadUrlPlugin(pluginIdentifier);
+		return;
+	}
+	if (pluginIdentifier.startsWith("!")) {
+		await loadDirectPlugin(pluginIdentifier.slice(1));
+		return;
+	}
 
-    const pluginName = getPluginName(pluginIdentifier);
-    let pluginPath = await resolvePlugin(pluginName);
-    if (!pluginPath) {
-        //!
-        // if (
-        //     (await prompts.confirm({
-        //         message: `Do you want to install plugin '${pluginName}'?`,
-        //         initialValue: true,
-        //     })) !== true
-        // ) {
-        //     return;
-        // }
+	if (isPluginLoaded(pluginIdentifier)) {
+		return;
+	}
 
-        logger.warn(
-            `Plugin '${pluginIdentifier}' not found. Attempting to install it...`,
-        );
-        try {
-            await installPlugin(pluginIdentifier);
-            pluginPath = await resolvePlugin(pluginName);
+	const pluginName = getPluginName(pluginIdentifier);
+	let pluginPath = await resolvePlugin(pluginName);
+	if (!pluginPath) {
+		//!
+		// if (
+		//     (await prompts.confirm({
+		//         message: `Do you want to install plugin '${pluginName}'?`,
+		//         initialValue: true,
+		//     })) !== true
+		// ) {
+		//     return;
+		// }
 
-            if (!pluginPath) {
-                throw new Error(
-                    `Failed to resolve plugin '${pluginIdentifier}' after installation.`,
-                );
-            }
-        } catch (installError) {
-            logger.error(`Failed to install plugin '${pluginIdentifier}'.`);
-            throw installError;
-        }
-    }
+		logger.warn(
+			`Plugin '${pluginIdentifier}' not found. Attempting to install it...`,
+		);
+		try {
+			await installPlugin(pluginIdentifier);
+			pluginPath = await resolvePlugin(pluginName);
 
-    const plugin = await import(pathToFileURL(pluginPath).href);
-    registerPlugin(pluginIdentifier, plugin.default);
+			if (!pluginPath) {
+				throw new Error(
+					`Failed to resolve plugin '${pluginIdentifier}' after installation.`,
+				);
+			}
+		} catch (installError) {
+			logger.error(`Failed to install plugin '${pluginIdentifier}'.`);
+			throw installError;
+		}
+	}
+
+	const plugin = await import(pathToFileURL(pluginPath).href);
+	registerPlugin(pluginIdentifier, plugin.default);
 }
 
 export function getJobExecutor(

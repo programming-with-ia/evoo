@@ -32,3 +32,11 @@ export async function Fetch<T>(
         throw error;
     }
 }
+
+export async function getLatestVersion(packageName: string): Promise<string> {
+	const response = await Fetch<{ version: string }>(
+		`https://registry.npmjs.org/${packageName}/latest`,
+		"json",
+	);
+	return response.version;
+}
