@@ -2,6 +2,7 @@ import { pathToFileURL } from "node:url";
 import {
 	Core,
 	getLatestVersion,
+	isValidUrl,
 	logger,
 	type Plugin,
 	type PluginData,
@@ -9,9 +10,16 @@ import {
 } from "@evoo/core";
 import {
 	cacheDirectPlugin,
+	cacheUrlPlugin,
 	resolveDirectPlugin,
 } from "./handle-direct-plugin";
 import { installPlugin, resolvePlugin } from "./handle-plugin";
+
+async function loadUrlPlugin(url: string): Promise<void> {
+	const pluginPath = await cacheUrlPlugin(url);
+	const plugin = await import(pathToFileURL(pluginPath).href);
+	registerPlugin(url, plugin.default);
+}
 
 async function loadDirectPlugin(pluginIdentifier: string): Promise<void> {
 	let pluginName: string;
@@ -91,6 +99,10 @@ export function registerPlugin(
 }
 
 export async function loadPlugin(pluginIdentifier: string): Promise<void> {
+	if (isValidUrl(pluginIdentifier)) {
+		await loadUrlPlugin(pluginIdentifier);
+		return;
+	}
 	if (pluginIdentifier.startsWith("!")) {
 		await loadDirectPlugin(pluginIdentifier.slice(1));
 		return;

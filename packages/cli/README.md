@@ -328,6 +328,18 @@ When a direct plugin is used, the following happens:
 2.  **Versioning**: You can specify a version (e.g., `!@evoo/plugin-shadcn@1.0.0-alpha.6`). If no version is provided, the `latest` version is automatically fetched from the npm registry.
 3.  **Local Caching**: The downloaded plugin is cached in your home directory (`~/.evoo/direct-plugins`). On subsequent runs, the cached version is used, avoiding unnecessary downloads.
 
+### Loading from a URL
+
+You can also load a plugin directly from any URL. This is useful for loading plugins from private repositories or other sources.
+
+```json
+{
+  "plugins": ["https://raw.githubusercontent.com/user/repo/refs/heads/master/setup.js"]
+}
+```
+
+When a URL is used, the plugin is downloaded and cached locally in the `~/.evoo/direct-plugins/.locals` directory. The plugin is re-downloaded on every run to ensure the latest version is always used.
+
 This feature provides a more flexible way to use and distribute plugins, making it easier to share and experiment with new automations.
 
 ## 🔒 Configuration & Authentication

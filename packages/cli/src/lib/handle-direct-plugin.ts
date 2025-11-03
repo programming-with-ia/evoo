@@ -1,8 +1,22 @@
+import crypto from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 import { Fetch, fs, logger } from "@evoo/core";
 
 const DIRECT_PLUGINS_DIR = path.join(os.homedir(), ".evoo", "direct-plugins");
+const LOCAL_PLUGINS_DIR = path.join(DIRECT_PLUGINS_DIR, ".locals");
+
+export async function cacheUrlPlugin(url: string): Promise<string> {
+	const hash = crypto.createHash("sha256").update(url).digest("hex");
+	const pluginPath = path.join(LOCAL_PLUGINS_DIR, `${hash}.js`);
+
+	const content = await Fetch(url, "text");
+
+	await fs.ensureDir(path.dirname(pluginPath));
+	await fs.writeFile(pluginPath, content);
+
+	return pluginPath;
+}
 
 export function getDirectPluginPath(
 	pluginName: string,
