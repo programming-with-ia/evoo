@@ -10,6 +10,7 @@ import { parseVar } from "./match-vars";
 import { prompts } from "./prompts";
 import { sharedData } from "./shared";
 import { getDeepValue, setDeepValue } from "./utils";
+import { findProjectRoot } from "./find-project-root";
 
 export const Core = {
     prompts,
@@ -22,6 +23,7 @@ export const Core = {
     getUserPkgManager,
     Fetch,
     execWithSpinner,
+    findProjectRoot,
     execaCommand,
     execa,
     isValidUrl,

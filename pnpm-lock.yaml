@@ -95,13 +95,13 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
 
-  plugins/file-content:
+  plugins/file-ops:
     devDependencies:
       '@evoo/core':
         specifier: workspace:*
         version: link:../../packages/core
 
-  plugins/file-ops:
+  plugins/file-templates:
     devDependencies:
       '@evoo/core':
         specifier: workspace:*
@@ -118,6 +118,12 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.7.3
+
+  plugins/package-json:
+    devDependencies:
+      '@evoo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
 
   plugins/placeholder:
     devDependencies:

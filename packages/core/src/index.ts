@@ -14,6 +14,7 @@ export { Core } from "./lib/plugin-arg";
 export * from "./lib/prompts";
 export * from "./lib/setting";
 export * from "./lib/shared";
+export * from "./lib/find-project-root";
 export * from "./lib/utils";
 export * from "./plugin-types";
 export * from "./types";

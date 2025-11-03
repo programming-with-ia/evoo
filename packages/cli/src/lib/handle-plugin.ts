@@ -1,9 +1,6 @@
-import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
-import { fs, installDependencies } from "@evoo/core";
-import { findProjectRoot } from "./find-project-root";
+import { findProjectRoot, fs, installDependencies } from "@evoo/core";
 
 const globalPluginDir = path.join(os.homedir(), ".evoo", "plugins");
 

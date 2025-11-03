@@ -16,11 +16,12 @@ import { prompts } from "./prompts";
 export const installDependencies = async (
     packages: NonNullable<JsonStructure["dependencies"]>,
     dev: boolean = false,
-    cwd: string = process.cwd(),
+    cwd: string = "",
     isGlobal: boolean = false,
     legacyPeerDeps = false, // only for npm
 ) => {
     // Convert input into an array of package install strings
+    cwd = cwd ?? process.cwd();
 
     if (packages.length === 0) {
         return;
